@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.springboot.bookMyShow.Entity.Admin;
 import com.springboot.bookMyShow.Entity.Seats;
+import com.springboot.bookMyShow.dao.AdminDao;
 import com.springboot.bookMyShow.dao.SeatsDao;
 import com.springboot.bookMyShow.util.ResponceStructure;
 
@@ -17,19 +19,27 @@ public class SeatsService {
 	@Autowired
 	SeatsDao sDao;
 	
-	public ResponseEntity<ResponceStructure<Seats>> saveSeats(Seats seats)
+	@Autowired
+	AdminDao aDao;
+	
+	public ResponseEntity<ResponceStructure<Seats>> saveSeats(Seats seats ,String aEmail,String aPassword)
 	{
-		ResponceStructure<Seats> str=new ResponceStructure<Seats>();
-		
-		str.setMessage(" seat has added");
-		str.setStatus(HttpStatus.CREATED.value());
-		str.setData(sDao.saveSeats(seats));
-		
-		return new ResponseEntity<ResponceStructure<Seats>>(str,HttpStatus.CREATED);
+		Admin exa=aDao.adminLogin(aEmail, aPassword);
+		if(exa!=null)
+		{
+			ResponceStructure<Seats> str=new ResponceStructure<Seats>();
+			
+			str.setMessage(" seat has added");
+			str.setStatus(HttpStatus.CREATED.value());
+			str.setData(sDao.saveSeats(seats));
+			
+			return new ResponseEntity<ResponceStructure<Seats>>(str,HttpStatus.CREATED);
+		}
+		return null;
 		
 	}
 	
-	public ResponseEntity<ResponceStructure<Seats>> findSeats(int sId)
+	public ResponseEntity<ResponceStructure<Seats>> findSeats(int sId )
 	{
 		ResponceStructure<Seats> str=new ResponceStructure<Seats>();
 		Seats s= sDao.findSeats(sId);
@@ -44,36 +54,46 @@ public class SeatsService {
 		return null;
 	}
 	
-	public ResponseEntity<ResponceStructure<Seats>> deleteSeats(int sId)
+	public ResponseEntity<ResponceStructure<Seats>> deleteSeats(int sId ,String aEmail,String aPassword)
 	{
-		ResponceStructure<Seats> str= new ResponceStructure<Seats>();
-		
-		Seats s= sDao.findSeats(sId);
-		
-		if(s!=null)
+		Admin exa=aDao.adminLogin(aEmail, aPassword);
+		if(exa!=null)
 		{
-			str.setMessage("Seat has Deleted");
-			str.setStatus(HttpStatus.OK.value());
-			str.setData(sDao.deleteSeats(sId));
+			ResponceStructure<Seats> str= new ResponceStructure<Seats>();
 			
-			return new ResponseEntity<ResponceStructure<Seats>>(str,HttpStatus.OK);
+			Seats s= sDao.findSeats(sId);
+			
+			if(s!=null)
+			{
+				str.setMessage("Seat has Deleted");
+				str.setStatus(HttpStatus.OK.value());
+				str.setData(sDao.deleteSeats(sId));
+				
+				return new ResponseEntity<ResponceStructure<Seats>>(str,HttpStatus.OK);
+			}
+			return null;
 		}
 		return null;
 		
 	}
 	
-	public ResponseEntity<ResponceStructure<Seats>> updateSeats(Seats seats,int sId)
+	public ResponseEntity<ResponceStructure<Seats>> updateSeats(Seats seats,int sId ,String aEmail,String aPassword)
 	{
-		ResponceStructure<Seats> str= new ResponceStructure<Seats>();
-		
-		Seats s=sDao.findSeats(sId);
-		if(s!=null)
+		Admin exa=aDao.adminLogin(aEmail, aPassword);
+		if(exa!=null)
 		{
-			str.setMessage(" Seat has updated");
-			str.setStatus(HttpStatus.OK.value());
-			str.setData(sDao.updateSeats(seats, sId));
+			ResponceStructure<Seats> str= new ResponceStructure<Seats>();
 			
-			return new ResponseEntity<ResponceStructure<Seats>>(str, HttpStatus.OK);
+			Seats s=sDao.findSeats(sId);
+			if(s!=null)
+			{
+				str.setMessage(" Seat has updated");
+				str.setStatus(HttpStatus.OK.value());
+				str.setData(sDao.updateSeats(seats, sId));
+				
+				return new ResponseEntity<ResponceStructure<Seats>>(str, HttpStatus.OK);
+			}
+			return null;
 		}
 		return null;
 	}

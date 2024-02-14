@@ -1,6 +1,6 @@
 package com.springboot.bookMyShow.bEnum;
 
-public enum TheateName {
+public enum TheatreName {
 	
 	Vetri,
 	Sathyam_Cinemas,

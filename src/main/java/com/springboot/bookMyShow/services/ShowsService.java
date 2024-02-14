@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.springboot.bookMyShow.Entity.Admin;
 import com.springboot.bookMyShow.Entity.Shows;
+import com.springboot.bookMyShow.dao.AdminDao;
 import com.springboot.bookMyShow.dao.ShowsDao;
 import com.springboot.bookMyShow.util.ResponceStructure;
 
@@ -16,15 +19,23 @@ public class ShowsService {
 	@Autowired
 	ShowsDao sDao;
 	
-	public ResponseEntity<ResponceStructure<Shows>> saveShows(Shows shows)
+	@Autowired
+	AdminDao aDao;
+	
+	public ResponseEntity<ResponceStructure<Shows>> saveShows(Shows shows ,String aEmail,String aPassword)
 	{
-		ResponceStructure<Shows> str=new ResponceStructure<Shows>();
-		
-		str.setMessage(" Show has added");
-		str.setStatus(HttpStatus.CREATED.value());
-		str.setData(sDao.saveShows(shows));
-		
-		return new ResponseEntity<ResponceStructure<Shows>>(str,HttpStatus.CREATED);
+		Admin exa=aDao.adminLogin(aEmail, aPassword);
+		if(exa!=null)
+		{
+			ResponceStructure<Shows> str=new ResponceStructure<Shows>();
+			
+			str.setMessage(" Show has added");
+			str.setStatus(HttpStatus.CREATED.value());
+			str.setData(sDao.saveShows(shows));
+			
+			return new ResponseEntity<ResponceStructure<Shows>>(str,HttpStatus.CREATED);
+		}
+		return null;
 		
 	}
 	
@@ -43,38 +54,49 @@ public class ShowsService {
 		return null;
 	}
 	
-	public ResponseEntity<ResponceStructure<Shows>> deleteShows(int sId)
+	public ResponseEntity<ResponceStructure<Shows>> deleteShows(int sId ,String aEmail,String aPassword)
 	{
-		ResponceStructure<Shows> str= new ResponceStructure<Shows>();
-		
-		Shows s= sDao.findShows(sId);
-		
-		if(s!=null)
+		Admin exa=aDao.adminLogin(aEmail, aPassword);
+		if(exa!=null)
 		{
-			str.setMessage("Seat has Deleted");
-			str.setStatus(HttpStatus.OK.value());
-			str.setData(sDao.deleteShows(sId));
+			ResponceStructure<Shows> str= new ResponceStructure<Shows>();
 			
-			return new ResponseEntity<ResponceStructure<Shows>>(str,HttpStatus.OK);
+			Shows s= sDao.findShows(sId);
+			
+			if(s!=null)
+			{
+				str.setMessage("Seat has Deleted");
+				str.setStatus(HttpStatus.OK.value());
+				str.setData(sDao.deleteShows(sId));
+				
+				return new ResponseEntity<ResponceStructure<Shows>>(str,HttpStatus.OK);
+			}
+			return null;
 		}
 		return null;
 		
 	}
 	
-	public ResponseEntity<ResponceStructure<Shows>> updateShows(Shows shows,int sId)
+	public ResponseEntity<ResponceStructure<Shows>> updateShows(Shows shows,int sId ,String aEmail,String aPassword)
 	{
-		ResponceStructure<Shows> str= new ResponceStructure<Shows>();
-		
-		Shows s=sDao.findShows(sId);
-		if(s!=null)
+		Admin exa=aDao.adminLogin(aEmail, aPassword);
+		if(exa!=null)
 		{
-			str.setMessage(" Seat has updated");
-			str.setStatus(HttpStatus.OK.value());
-			str.setData(sDao.updateShows(shows, sId));
+			ResponceStructure<Shows> str= new ResponceStructure<Shows>();
 			
-			return new ResponseEntity<ResponceStructure<Shows>>(str, HttpStatus.OK);
+			Shows s=sDao.findShows(sId);
+			if(s!=null)
+			{
+				str.setMessage(" Seat has updated");
+				str.setStatus(HttpStatus.OK.value());
+				str.setData(sDao.updateShows(shows, sId));
+				
+				return new ResponseEntity<ResponceStructure<Shows>>(str, HttpStatus.OK);
+			}
+			return null;
 		}
 		return null;
+		
 	}
 	
 	public ResponseEntity<ResponceStructure<List<Shows>>> findAllShows()

@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.bookMyShow.Entity.Shows;
@@ -24,27 +26,27 @@ public class ShowsController {
 	ShowsService sService;
 	
 	@PostMapping("save")
-	public ResponseEntity<ResponceStructure<Shows>> saveShows(Shows shows)
+	public ResponseEntity<ResponceStructure<Shows>> saveShows(@RequestBody Shows shows ,@RequestParam String aEmail,@RequestParam String aPassword)
 	{
-		return sService.saveShows(shows);
+		return sService.saveShows(shows, aEmail, aPassword);
 	}
 	
 	@GetMapping("find")
-	public ResponseEntity<ResponceStructure<Shows>> findShows(int sId)
+	public ResponseEntity<ResponceStructure<Shows>> findShows(@RequestParam int sId)
 	{
 		return sService.findShows(sId);
 	}
 	
 	@DeleteMapping("delete")
-	public ResponseEntity<ResponceStructure<Shows>> delelteShows(int sId)
+	public ResponseEntity<ResponceStructure<Shows>> delelteShows(@RequestParam int sId,@RequestParam String aEmail,@RequestParam String aPassword)
 	{
-		return sService.deleteShows(sId);
+		return sService.deleteShows(sId, aEmail, aPassword);
 	}
 	
 	@PutMapping("update")
-	public ResponseEntity<ResponceStructure<Shows>> updateShows(Shows shows, int sId)
+	public ResponseEntity<ResponceStructure<Shows>> updateShows(@RequestBody Shows shows, @RequestParam int sId,@RequestParam String aEmail,@RequestParam String aPassword)
 	{
-		return sService.updateShows(shows, sId);
+		return sService.updateShows(shows, sId, aEmail, aPassword);
 	}
 	
 	@GetMapping("findAll")

@@ -54,37 +54,47 @@ public class AdminService {
 		return null;
 	}
 	
-	public ResponseEntity<ResponceStructure<AdminDto>> deleteAdmin(int aId)
+	public ResponseEntity<ResponceStructure<AdminDto>> deleteAdmin(int aId ,String aEmail,String aPassword)
 	{
-		ResponceStructure<AdminDto> str=new ResponceStructure<AdminDto>();
-		Admin a=aDao.findAdmin(aId);
-		if(a!=null)
+		Admin exa=aDao.adminLogin(aEmail, aPassword);
+		if(exa!=null)
 		{
-			mapper.map(aDao.deleteAdmin(aId), aDto);
-			
-			str.setMessage(a.getAName()+"Admin ha Deleted");
-			str.setStatus(HttpStatus.OK.value());
-			str.setData(aDto);
-			
-			return new ResponseEntity<ResponceStructure<AdminDto>>(str,HttpStatus.OK);
-			
+			ResponceStructure<AdminDto> str=new ResponceStructure<AdminDto>();
+			Admin a=aDao.findAdmin(aId);
+			if(a!=null)
+			{
+				mapper.map(aDao.deleteAdmin(aId), aDto);
+				
+				str.setMessage(a.getAName()+"Admin ha Deleted");
+				str.setStatus(HttpStatus.OK.value());
+				str.setData(aDto);
+				
+				return new ResponseEntity<ResponceStructure<AdminDto>>(str,HttpStatus.OK);
+				
+			}
+			return null;
 		}
 		return null;
 	}
 	
-	public ResponseEntity<ResponceStructure<AdminDto>> updateAdmin(Admin admin,int aId)
+	public ResponseEntity<ResponceStructure<AdminDto>> updateAdmin(Admin admin,int aId,String aEmail,String aPassword)
 	{
-		ResponceStructure<AdminDto> str= new ResponceStructure<AdminDto>();
-		Admin exa=aDao.findAdmin(aId);
+		Admin exa = aDao.adminLogin(aEmail, aPassword);
 		if(exa!=null)
 		{
-			mapper.map(aDao.updateAdmin(admin, aId), aDto);
-			
-			str.setMessage(admin.getAName()+"Admin has Updated");
-			str.setStatus(HttpStatus.OK.value());
-			str.setData(aDto);
-			
-			return new ResponseEntity<ResponceStructure<AdminDto>>(str,HttpStatus.OK);
+			ResponceStructure<AdminDto> str= new ResponceStructure<AdminDto>();
+			Admin a=aDao.findAdmin(aId);
+			if(a!=null)
+			{
+				mapper.map(aDao.updateAdmin(admin, aId), aDto);
+				
+				str.setMessage(admin.getAName()+"Admin has Updated");
+				str.setStatus(HttpStatus.OK.value());
+				str.setData(aDto);
+				
+				return new ResponseEntity<ResponceStructure<AdminDto>>(str,HttpStatus.OK);
+			}
+			return null;
 		}
 		return null;
 	}
@@ -109,27 +119,29 @@ public class AdminService {
 		return null ;
 	}
 	
-	public ResponseEntity<ResponceStructure<AdminDto>> verifyAdmin(String aEmail,String aPassword)
-	{
-		ResponceStructure<AdminDto> str= new ResponceStructure<AdminDto>();
-		
-		List<Admin> aList= aDao.findAllAdmin();
-		
-		if(!aList.isEmpty())
-		{
-			for (Admin admin : aList) {
-				if(admin.getAEmail().equals(aEmail) && admin.getAPassword().equals(aPassword))
-				{
-					mapper.map(admin, aDto);
-					str.setMessage("Admin login successfullly");
-					str.setStatus(HttpStatus.OK.value());
-					str.setData(aDto);
-					return new ResponseEntity<ResponceStructure<AdminDto>>(str,HttpStatus.OK);
-							
-				}
-			}
-		}
-		return null;
-		
-	}
+//	public ResponseEntity<ResponceStructure<AdminDto>> verifyAdmin(String aEmail,String aPassword)
+//	{
+//		ResponceStructure<AdminDto> str= new ResponceStructure<AdminDto>();
+//		
+//		List<Admin> aList= aDao.findAllAdmin();
+//		
+//		if(!aList.isEmpty())
+//		{
+//			for (Admin admin : aList) {
+//				if(admin.getAEmail().equals(aEmail) && admin.getAPassword().equals(aPassword))
+//				{
+//					mapper.map(admin, aDto);
+//					str.setMessage("Admin login successfullly");
+//					str.setStatus(HttpStatus.OK.value());
+//					str.setData(aDto);
+//					return new ResponseEntity<ResponceStructure<AdminDto>>(str,HttpStatus.OK);
+//							
+//				}
+//			}
+//		}
+//		return null;
+//		
+//	}
+	
+	
 }

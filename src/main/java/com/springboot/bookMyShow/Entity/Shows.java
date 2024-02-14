@@ -1,6 +1,7 @@
 package com.springboot.bookMyShow.Entity;
 
 import java.time.LocalTime;
+import java.util.List;
 
 import org.springframework.stereotype.Component;
 
@@ -31,6 +32,6 @@ public class Shows
 	private Movie sMovie;
 	
 	@OneToMany(cascade =CascadeType.ALL)
-	private Seats  sSeats;
+	private List<Seats>  sSeats;
 
 }

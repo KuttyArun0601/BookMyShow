@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.springboot.bookMyShow.Entity.Admin;
 import com.springboot.bookMyShow.Entity.Theatre;
+import com.springboot.bookMyShow.dao.AdminDao;
 import com.springboot.bookMyShow.dao.TheatreDao;
 import com.springboot.bookMyShow.util.ResponceStructure;
 
@@ -17,20 +19,29 @@ public class TheatreService {
 	@Autowired
 	TheatreDao tDao;
 	
-	public ResponseEntity<ResponceStructure<Theatre>> saveTheatre(Theatre theatre)
+	@Autowired
+	AdminDao aDao;
+	
+	public ResponseEntity<ResponceStructure<Theatre>> saveTheatre(Theatre theatre ,String aEmail,String aPassword)
 	{
-		ResponceStructure<Theatre> str=new ResponceStructure<Theatre>();
-		
-		str.setMessage("Theatre has saved");
-		str.setStatus(HttpStatus.CREATED.value());
-		str.setData(tDao.saveTheatre(theatre));
-		
-		return new ResponseEntity<ResponceStructure<Theatre>>(str,HttpStatus.CREATED);
+		Admin exa=aDao.adminLogin(aEmail, aPassword);
+		if(exa!=null)
+		{
+			ResponceStructure<Theatre> str=new ResponceStructure<Theatre>();
+			
+			str.setMessage("Theatre has saved");
+			str.setStatus(HttpStatus.CREATED.value());
+			str.setData(tDao.saveTheatre(theatre));
+			
+			return new ResponseEntity<ResponceStructure<Theatre>>(str,HttpStatus.CREATED);
+		}
+		return null;
 		
 	}
 	
 	public ResponseEntity<ResponceStructure<Theatre>> findTheatre(int tId)
 	{
+		
 		ResponceStructure<Theatre> str=new ResponceStructure<Theatre>();
 		Theatre t= tDao.findTheatre(tId);
 		if(t!=null)
@@ -42,38 +53,49 @@ public class TheatreService {
 			return new ResponseEntity<ResponceStructure<Theatre>>(str,HttpStatus.FOUND);
 		}
 		return null;
+		
 	}
 	
-	public ResponseEntity<ResponceStructure<Theatre>> deleteTheatre(int tId)
+	public ResponseEntity<ResponceStructure<Theatre>> deleteTheatre(int tId ,String aEmail,String aPassword)
 	{
-		ResponceStructure<Theatre> str= new ResponceStructure<Theatre>();
-		
-		Theatre t= tDao.findTheatre(tId);
-		
-		if(t!=null)
+		Admin exa=aDao.adminLogin(aEmail, aPassword);
+		if(exa!=null)
 		{
-			str.setMessage("Theatre has Deleted");
-			str.setStatus(HttpStatus.OK.value());
-			str.setData(tDao.deleteTheatre(tId));
+			ResponceStructure<Theatre> str= new ResponceStructure<Theatre>();
 			
-			return new ResponseEntity<ResponceStructure<Theatre>>(str,HttpStatus.OK);
+			Theatre t= tDao.findTheatre(tId);
+			
+			if(t!=null)
+			{
+				str.setMessage("Theatre has Deleted");
+				str.setStatus(HttpStatus.OK.value());
+				str.setData(tDao.deleteTheatre(tId));
+				
+				return new ResponseEntity<ResponceStructure<Theatre>>(str,HttpStatus.OK);
+			}
+			return null;
 		}
 		return null;
 		
 	}
 	
-	public ResponseEntity<ResponceStructure<Theatre>> updateTheatre(Theatre theatre,int tId)
+	public ResponseEntity<ResponceStructure<Theatre>> updateTheatre(Theatre theatre,int tId ,String aEmail,String aPassword)
 	{
-		ResponceStructure<Theatre> str= new ResponceStructure<Theatre>();
-		
-		Theatre t=tDao.findTheatre(tId);
-		if(t!=null)
+		Admin exa=aDao.adminLogin(aEmail, aPassword);
+		if(exa!=null)
 		{
-			str.setMessage(" Theatre has updated");
-			str.setStatus(HttpStatus.OK.value());
-			str.setData(tDao.updatetheatre(theatre, tId));
+			ResponceStructure<Theatre> str= new ResponceStructure<Theatre>();
 			
-			return new ResponseEntity<ResponceStructure<Theatre>>(str, HttpStatus.OK);
+			Theatre t=tDao.findTheatre(tId);
+			if(t!=null)
+			{
+				str.setMessage(" Theatre has updated");
+				str.setStatus(HttpStatus.OK.value());
+				str.setData(tDao.updatetheatre(theatre, tId));
+				
+				return new ResponseEntity<ResponceStructure<Theatre>>(str, HttpStatus.OK);
+			}
+			return null;
 		}
 		return null;
 	}

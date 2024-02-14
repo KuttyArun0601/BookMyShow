@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.bookMyShow.Entity.Seats;
@@ -23,9 +25,9 @@ public class SeatsController {
 	SeatsService sService;
 
 	@PostMapping("save")
-	public ResponseEntity<ResponceStructure<Seats>> saveSeats(Seats seats)
+	public ResponseEntity<ResponceStructure<Seats>> saveSeats(@RequestBody Seats seats ,@RequestParam String aEmail,@RequestParam String aPassword)
 	{
-		return sService.saveSeats(seats);
+		return sService.saveSeats(seats, aEmail, aPassword);
 	}
 	
 	@GetMapping("find")
@@ -35,15 +37,15 @@ public class SeatsController {
 	}
 	
 	@DeleteMapping("delete")
-	public ResponseEntity<ResponceStructure<Seats>> delelteSeats(int sId)
+	public ResponseEntity<ResponceStructure<Seats>> delelteSeats(@RequestParam int sId ,@RequestParam String aEmail,@RequestParam String aPassword)
 	{
-		return sService.deleteSeats(sId);
+		return sService.deleteSeats(sId, aEmail, aPassword);
 	}
 	
 	@PutMapping("update")
-	public ResponseEntity<ResponceStructure<Seats>> updateSeats(Seats seats, int sId)
+	public ResponseEntity<ResponceStructure<Seats>> updateSeats(@RequestBody Seats seats, @RequestParam int sId ,@RequestParam String aEmail,@RequestParam String aPassword)
 	{
-		return sService.updateSeats(seats, sId);
+		return sService.updateSeats(seats, sId, aEmail, aPassword);
 	}
 	
 	@GetMapping("findAll")

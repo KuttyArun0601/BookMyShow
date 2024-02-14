@@ -2,6 +2,8 @@ package com.springboot.bookMyShow.Entity;
 
 import org.springframework.stereotype.Component;
 
+import com.springboot.bookMyShow.bEnum.SeatType;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +22,7 @@ public class Seats {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int sId;
+	private SeatType stype;
 	private int sNoOfSeats;
 	
 	@ManyToOne(cascade = CascadeType.ALL)

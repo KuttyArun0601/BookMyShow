@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.bookMyShow.Entity.Theatre;
@@ -23,9 +25,9 @@ public class TheatreController {
 	TheatreService tService;
 	
 	@PostMapping("save")
-	public ResponseEntity<ResponceStructure<Theatre>> saveTheatre(Theatre theatre)
+	public ResponseEntity<ResponceStructure<Theatre>> saveTheatre(@RequestBody Theatre theatre ,@RequestParam String aEmail,@RequestParam String aPassword)
 	{
-		return tService.saveTheatre(theatre);
+		return tService.saveTheatre(theatre, aEmail, aPassword);
 	}
 	
 	@GetMapping("find")
@@ -35,15 +37,15 @@ public class TheatreController {
 	}
 	
 	@DeleteMapping("delete")
-	public ResponseEntity<ResponceStructure<Theatre>> delelteTheatre(int tId)
+	public ResponseEntity<ResponceStructure<Theatre>> delelteTheatre(@RequestParam int tId ,@RequestParam String aEmail,@RequestParam String aPassword)
 	{
-		return tService.deleteTheatre(tId);
+		return tService.deleteTheatre(tId, aEmail, aPassword);
 	}
 	
 	@PutMapping("update")
-	public ResponseEntity<ResponceStructure<Theatre>> updateShows(Theatre theatre, int tId)
+	public ResponseEntity<ResponceStructure<Theatre>> updateShows(@RequestBody Theatre theatre,@RequestParam int tId ,@RequestParam String aEmail,@RequestParam String aPassword)
 	{
-		return tService.updateTheatre(theatre, tId);
+		return tService.updateTheatre(theatre, tId, aEmail, aPassword);
 	}
 	
 	@GetMapping("findAll")

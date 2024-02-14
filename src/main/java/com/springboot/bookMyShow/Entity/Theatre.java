@@ -1,6 +1,10 @@
 package com.springboot.bookMyShow.Entity;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
+
+import com.springboot.bookMyShow.bEnum.TheatreName;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -20,12 +24,12 @@ public class Theatre {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int tId;;
-	private String tName;
+	private TheatreName tName;
 	private String tLocation;
 	private  int tCapacity;
 	
 	@OneToMany(cascade = CascadeType.ALL)
-	private Shows tShows;
+	private List<Shows> tShows;
 	
 
 }
