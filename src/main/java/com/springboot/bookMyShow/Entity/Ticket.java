@@ -2,12 +2,10 @@ package com.springboot.bookMyShow.Entity;
 
 import org.springframework.stereotype.Component;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,17 +13,11 @@ import lombok.Setter;
 @Component
 @Getter
 @Setter
-public class Theatre {
-	
+public class Ticket {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int tId;;
-	private String tName;
-	private String tLocation;
-	private  int tCapacity;
+	private int tId;
 	
-	@OneToMany(cascade = CascadeType.ALL)
-	private Shows tShows;
 	
-
 }

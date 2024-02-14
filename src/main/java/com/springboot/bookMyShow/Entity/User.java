@@ -1,5 +1,7 @@
 package com.springboot.bookMyShow.Entity;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import jakarta.persistence.CascadeType;
@@ -25,5 +27,5 @@ public class User {
 	private String uPassword;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	private Movie uMovie;
+	private List<Booking> uBooking;
 }

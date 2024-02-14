@@ -8,7 +8,7 @@ public enum TheateName {
 	Rohini,
 	AGS,
 	PVR,
-	Maharani,
+	Maharani
 	
 	
 }

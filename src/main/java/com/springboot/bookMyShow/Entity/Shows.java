@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,5 +30,7 @@ public class Shows
 	@OneToOne(cascade = CascadeType.ALL)
 	private Movie sMovie;
 	
+	@OneToMany(cascade =CascadeType.ALL)
+	private Seats  sSeats;
 
 }

@@ -20,7 +20,7 @@ public class BookingDao {
 		return bRepo.save(book);
 	}
 	
-	public Booking findBokking(int bId)
+	public Booking findBooking(int bId)
 	{
 		Optional<Booking> opBooking=bRepo.findById(bId);
 		if(opBooking.isPresent())
@@ -32,14 +32,14 @@ public class BookingDao {
 	
 	public Booking deleteBooking(int bId)
 	{
-		Booking b=findBokking(bId);
+		Booking b=findBooking(bId);
 		bRepo.delete(b);
 		return b;
 	}
 	
 	public Booking updateBooking(Booking book, int bId)
 	{
-		Booking exb=findBokking(bId);
+		Booking exb=findBooking(bId);
 		if(exb!=null)
 		{
 			book.setBId(bId);
