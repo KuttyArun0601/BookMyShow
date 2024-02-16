@@ -11,6 +11,8 @@ import com.springboot.bookMyShow.Entity.Admin;
 import com.springboot.bookMyShow.Entity.Seats;
 import com.springboot.bookMyShow.dao.AdminDao;
 import com.springboot.bookMyShow.dao.SeatsDao;
+import com.springboot.bookMyShow.exceptions.LoginFailed;
+import com.springboot.bookMyShow.exceptions.SeatsNotFound;
 import com.springboot.bookMyShow.util.ResponceStructure;
 
 @Service
@@ -35,7 +37,7 @@ public class SeatsService {
 			
 			return new ResponseEntity<ResponceStructure<Seats>>(str,HttpStatus.CREATED);
 		}
-		return null;
+		throw new LoginFailed("Enter valid email & passworrd");
 		
 	}
 	
@@ -51,7 +53,7 @@ public class SeatsService {
 			
 			return new ResponseEntity<ResponceStructure<Seats>>(str,HttpStatus.FOUND);
 		}
-		return null;
+		throw new SeatsNotFound("Seats not found with the given id"+sId);
 	}
 	
 	public ResponseEntity<ResponceStructure<Seats>> deleteSeats(int sId ,String aEmail,String aPassword)
@@ -71,9 +73,9 @@ public class SeatsService {
 				
 				return new ResponseEntity<ResponceStructure<Seats>>(str,HttpStatus.OK);
 			}
-			return null;
+			throw new SeatsNotFound("Seats not found with the given id"+sId);
 		}
-		return null;
+		throw new LoginFailed("Enter valid email & passworrd");
 		
 	}
 	
@@ -93,9 +95,9 @@ public class SeatsService {
 				
 				return new ResponseEntity<ResponceStructure<Seats>>(str, HttpStatus.OK);
 			}
-			return null;
+			throw new SeatsNotFound("Seats not found with the given id"+sId);
 		}
-		return null;
+		throw new LoginFailed("Enter valid email & passworrd");
 	}
 	
 	public ResponseEntity<ResponceStructure<List<Seats>>> findAllSeats()
@@ -112,6 +114,6 @@ public class SeatsService {
 			return new ResponseEntity<ResponceStructure<List<Seats>>>(str,HttpStatus.FOUND);
 			
 		}
-		return null;
+		throw new SeatsNotFound("Seats not found");
 	}
 }

@@ -11,6 +11,9 @@ import com.springboot.bookMyShow.Entity.Admin;
 import com.springboot.bookMyShow.Entity.Theatre;
 import com.springboot.bookMyShow.dao.AdminDao;
 import com.springboot.bookMyShow.dao.TheatreDao;
+import com.springboot.bookMyShow.exceptions.LoginFailed;
+import com.springboot.bookMyShow.exceptions.ShowsNotFound;
+import com.springboot.bookMyShow.exceptions.TheatreNotFound;
 import com.springboot.bookMyShow.util.ResponceStructure;
 
 @Service
@@ -35,7 +38,7 @@ public class TheatreService {
 			
 			return new ResponseEntity<ResponceStructure<Theatre>>(str,HttpStatus.CREATED);
 		}
-		return null;
+		throw new LoginFailed("Enter valid email & passworrd");
 		
 	}
 	
@@ -52,7 +55,7 @@ public class TheatreService {
 			
 			return new ResponseEntity<ResponceStructure<Theatre>>(str,HttpStatus.FOUND);
 		}
-		return null;
+		throw new TheatreNotFound("Theatre not found with the given id"+tId);
 		
 	}
 	
@@ -73,9 +76,9 @@ public class TheatreService {
 				
 				return new ResponseEntity<ResponceStructure<Theatre>>(str,HttpStatus.OK);
 			}
-			return null;
+			throw new TheatreNotFound("Theatre not found with the given id"+tId);
 		}
-		return null;
+		throw new LoginFailed("Enter valid email & passworrd");
 		
 	}
 	
@@ -95,9 +98,9 @@ public class TheatreService {
 				
 				return new ResponseEntity<ResponceStructure<Theatre>>(str, HttpStatus.OK);
 			}
-			return null;
+			throw new TheatreNotFound("Theatre not found with the given id"+tId);
 		}
-		return null;
+		throw new LoginFailed("Enter valid email & passworrd");
 	}
 	
 	public ResponseEntity<ResponceStructure<List<Theatre>>> findAllTheatre()
@@ -114,7 +117,7 @@ public class TheatreService {
 			return new ResponseEntity<ResponceStructure<List<Theatre>>>(str,HttpStatus.FOUND);
 			
 		}
-		return null;
+		throw new TheatreNotFound("Theatre not found ");
 	}
 	
 }

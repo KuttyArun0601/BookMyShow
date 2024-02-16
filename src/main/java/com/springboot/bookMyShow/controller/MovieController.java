@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,8 @@ import com.springboot.bookMyShow.Entity.Movie;
 import com.springboot.bookMyShow.services.MovieService;
 import com.springboot.bookMyShow.util.ResponceStructure;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("movie")
 public class MovieController {
@@ -25,7 +28,7 @@ public class MovieController {
 	MovieService mService;
 	
 	@PostMapping("save")
-	public ResponseEntity<ResponceStructure<Movie>> saveMovie(@RequestBody Movie movie ,@RequestParam String aEmail,@RequestParam String aPassword)
+	public ResponseEntity<ResponceStructure<Movie>> saveMovie(@Valid @RequestBody Movie movie,BindingResult result ,@RequestParam String aEmail,@RequestParam String aPassword)
 	{
 		return mService.saveMovie(movie, aEmail, aPassword);
 	}
@@ -49,7 +52,7 @@ public class MovieController {
 	}
 	
 	@GetMapping("findAll")
-	public ResponseEntity<ResponceStructure<List<Movie>>> findAllUsers()
+	public ResponseEntity<ResponceStructure<List<Movie>>> findAllMovie()
 	{
 		return mService.findAllMovies();
 	}

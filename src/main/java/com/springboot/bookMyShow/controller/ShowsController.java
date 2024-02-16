@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,8 @@ import com.springboot.bookMyShow.Entity.Shows;
 import com.springboot.bookMyShow.services.ShowsService;
 import com.springboot.bookMyShow.util.ResponceStructure;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("shows")
 public class ShowsController {
@@ -26,7 +29,7 @@ public class ShowsController {
 	ShowsService sService;
 	
 	@PostMapping("save")
-	public ResponseEntity<ResponceStructure<Shows>> saveShows(@RequestBody Shows shows ,@RequestParam String aEmail,@RequestParam String aPassword)
+	public ResponseEntity<ResponceStructure<Shows>> saveShows(@Valid @RequestBody Shows shows,BindingResult result ,@RequestParam String aEmail,@RequestParam String aPassword)
 	{
 		return sService.saveShows(shows, aEmail, aPassword);
 	}

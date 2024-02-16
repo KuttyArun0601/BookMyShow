@@ -11,6 +11,8 @@ import com.springboot.bookMyShow.Entity.Admin;
 import com.springboot.bookMyShow.Entity.Movie;
 import com.springboot.bookMyShow.dao.AdminDao;
 import com.springboot.bookMyShow.dao.MovieDao;
+import com.springboot.bookMyShow.exceptions.LoginFailed;
+import com.springboot.bookMyShow.exceptions.MovieNotFound;
 import com.springboot.bookMyShow.util.ResponceStructure;
 
 @Service
@@ -35,7 +37,7 @@ public class MovieService {
 			
 			return new ResponseEntity<ResponceStructure<Movie>>(str,HttpStatus.CREATED);
 		}
-		return null;
+		throw new LoginFailed("Enter valid email & passworrd");
 		
 	}
 	
@@ -51,7 +53,7 @@ public class MovieService {
 			
 			return new ResponseEntity<ResponceStructure<Movie>>(str,HttpStatus.FOUND);
 		}
-		return null;
+		throw new MovieNotFound("movie not found with the given id"+mId);
 	}
 	
 	public ResponseEntity<ResponceStructure<Movie>> deleteMovie(int mId ,String aEmail,String aPassword)
@@ -71,9 +73,9 @@ public class MovieService {
 				
 				return new ResponseEntity<ResponceStructure<Movie>>(str,HttpStatus.OK);
 			}
-			return null;
+			throw new MovieNotFound("movie not found with the given id"+mId);
 		}
-		return null;
+		throw new LoginFailed("Enter valid email & passworrd");
 		
 		
 	}
@@ -94,9 +96,9 @@ public class MovieService {
 				
 				return new ResponseEntity<ResponceStructure<Movie>>(str, HttpStatus.OK);
 			}
-			return null;
+			throw new MovieNotFound("movie not found with the given id"+mId);
 		}
-		return null;
+		throw new LoginFailed("Enter valid email & passworrd");
 	}
 	
 	public ResponseEntity<ResponceStructure<List<Movie>>> findAllMovies()
@@ -113,7 +115,7 @@ public class MovieService {
 			return new ResponseEntity<ResponceStructure<List<Movie>>>(str,HttpStatus.FOUND);
 			
 		}
-		return null;
+		throw new MovieNotFound("movie not found");
 	}
 	
 }

@@ -14,6 +14,9 @@ import com.springboot.bookMyShow.Entity.User;
 import com.springboot.bookMyShow.dao.UserDao;
 
 import com.springboot.bookMyShow.dto.UserDto;
+import com.springboot.bookMyShow.exceptions.LoginFailed;
+import com.springboot.bookMyShow.exceptions.TicketNotFound;
+import com.springboot.bookMyShow.exceptions.UserNotFound;
 import com.springboot.bookMyShow.util.ResponceStructure;
 
 @Service
@@ -27,15 +30,17 @@ public class UserService {
 	
 	public ResponseEntity<ResponceStructure<UserDto>> saveUser(User user)
 	{
-		ResponceStructure<UserDto> str = new ResponceStructure<UserDto>();
 		
-		mapper.map(uDao.saveUser(user), uDto);
-		
-		str.setMessage(user.getUName()+"User has Saved");
-		str.setStatus(HttpStatus.CREATED.value());
-		str.setData(uDto);
-		
-		return new ResponseEntity<ResponceStructure<UserDto>>(str,HttpStatus.CREATED);
+			ResponceStructure<UserDto> str = new ResponceStructure<UserDto>();
+			
+			mapper.map(uDao.saveUser(user), uDto);
+			
+			str.setMessage(user.getUName()+"User has Saved");
+			str.setStatus(HttpStatus.CREATED.value());
+			str.setData(uDto);
+			
+			return new ResponseEntity<ResponceStructure<UserDto>>(str,HttpStatus.CREATED);
+			
 		
 	}
 	
@@ -54,45 +59,55 @@ public class UserService {
 			return new ResponseEntity<ResponceStructure<UserDto>>(str,HttpStatus.FOUND);
 			
 		}
-		return null;
+		throw new UserNotFound("User not found with the given id"+uId);
 	}
 	
-	public ResponseEntity<ResponceStructure<UserDto>> deleteUser(int uId)
+	public ResponseEntity<ResponceStructure<UserDto>> deleteUser(int uId, String uEmail, String uPassword)
 	{
-		ResponceStructure<UserDto> str= new ResponceStructure<UserDto>();
-		
-		User u=uDao.findUser(uId);
+		User u =uDao.userLogin(uEmail, uPassword);
 		if(u!=null)
 		{
-			mapper.map(uDao.deleteUser(uId), uDto);
+			ResponceStructure<UserDto> str= new ResponceStructure<UserDto>();
 			
-			str.setMessage(u.getUName()+" user has deleted");
-			str.setStatus(HttpStatus.OK.value());
-			str.setData(uDto);
-			
-			return new ResponseEntity<ResponceStructure<UserDto>>(str,HttpStatus.OK);
+			User exu=uDao.findUser(uId);
+			if(exu!=null)
+			{
+				mapper.map(uDao.deleteUser(uId), uDto);
+				
+				str.setMessage(u.getUName()+" user has deleted");
+				str.setStatus(HttpStatus.OK.value());
+				str.setData(uDto);
+				
+				return new ResponseEntity<ResponceStructure<UserDto>>(str,HttpStatus.OK);
+			}
+			throw new UserNotFound("User not found with the given id"+uId);
 		}
-		return null;
+		throw new LoginFailed("Enter valid email & password");
 		
 	}
 	
-	public ResponseEntity<ResponceStructure<UserDto>> updateUser(User user, int uId)
+	public ResponseEntity<ResponceStructure<UserDto>> updateUser(User user, int uId, String uEmail, String uPassword)
 	{
-		
-		ResponceStructure<UserDto> str=new ResponceStructure<UserDto>();
-		
-		User exu=uDao.findUser(uId);
-		if(exu!=null)
+		User u =uDao.userLogin(uEmail, uPassword);
+		if(u!=null)
 		{
-			mapper.map(uDao.updateUser(user, uId), uDto);
+			ResponceStructure<UserDto> str=new ResponceStructure<UserDto>();
 			
-			str.setMessage(user.getUName()+" user has updated");
-			str.setStatus(HttpStatus.OK.value());
-			str.setData(uDto);
-			
-			return new ResponseEntity<ResponceStructure<UserDto>>(str,HttpStatus.OK);
+			User exu=uDao.findUser(uId);
+			if(exu!=null)
+			{
+				mapper.map(uDao.updateUser(user, uId), uDto);
+				
+				str.setMessage(user.getUName()+" user has updated");
+				str.setStatus(HttpStatus.OK.value());
+				str.setData(uDto);
+				
+				return new ResponseEntity<ResponceStructure<UserDto>>(str,HttpStatus.OK);
+			}
+			throw new UserNotFound("User not found with the given id"+uId);
 		}
-		return null;
+		throw new LoginFailed("Enter valid email & password");
+		
 	}
 	
 	
@@ -116,32 +131,32 @@ public class UserService {
 			return new ResponseEntity<ResponceStructure<List<UserDto>>>(str,HttpStatus.FOUND);
 			
 		}
-		return null;
+		throw new UserNotFound("User not found");
 	}
 	
-	
-	public ResponseEntity<ResponceStructure<UserDto>> verifyUser(String uEmail,String uPassword)
-	{
-		ResponceStructure<UserDto> str= new ResponceStructure<UserDto>();
-		
-		List<User> uList= uDao.findAllUser();
-		
-		if(!uList.isEmpty())
-		{
-			for (User user : uList) {
-				if(user.getUEmail().equals(uEmail) && user.getUPassword().equals(uPassword))
-				{
-					str.setMessage("User logined successfullly");
-					str.setStatus(HttpStatus.OK.value());
-					str.setData(uDto);
-					return new ResponseEntity<ResponceStructure<UserDto>>(str,HttpStatus.OK);
-							
-				}
-				return null;
-			}
-		}
-		return null;
-		
-	}
+//	
+//	public ResponseEntity<ResponceStructure<UserDto>> verifyUser(String uEmail,String uPassword)
+//	{
+//		ResponceStructure<UserDto> str= new ResponceStructure<UserDto>();
+//		
+//		List<User> uList= uDao.findAllUser();
+//		
+//		if(!uList.isEmpty())
+//		{
+//			for (User user : uList) {
+//				if(user.getUEmail().equals(uEmail) && user.getUPassword().equals(uPassword))
+//				{
+//					str.setMessage("User logined successfullly");
+//					str.setStatus(HttpStatus.OK.value());
+//					str.setData(uDto);
+//					return new ResponseEntity<ResponceStructure<UserDto>>(str,HttpStatus.OK);
+//							
+//				}
+//				return null;
+//			}
+//		}
+//		return null;
+//		
+//	}
 
 }

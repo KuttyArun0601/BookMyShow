@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,8 @@ import com.springboot.bookMyShow.Entity.Theatre;
 import com.springboot.bookMyShow.services.TheatreService;
 import com.springboot.bookMyShow.util.ResponceStructure;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("theatre")
 public class TheatreController {
@@ -25,7 +28,7 @@ public class TheatreController {
 	TheatreService tService;
 	
 	@PostMapping("save")
-	public ResponseEntity<ResponceStructure<Theatre>> saveTheatre(@RequestBody Theatre theatre ,@RequestParam String aEmail,@RequestParam String aPassword)
+	public ResponseEntity<ResponceStructure<Theatre>> saveTheatre(@Valid @RequestBody Theatre theatre,BindingResult result ,@RequestParam String aEmail,@RequestParam String aPassword)
 	{
 		return tService.saveTheatre(theatre, aEmail, aPassword);
 	}

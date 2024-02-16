@@ -8,7 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.springboot.bookMyShow.Entity.Booking;
+import com.springboot.bookMyShow.Entity.User;
 import com.springboot.bookMyShow.dao.BookingDao;
+import com.springboot.bookMyShow.dao.UserDao;
+import com.springboot.bookMyShow.exceptions.BookingNotFound;
+import com.springboot.bookMyShow.exceptions.LoginFailed;
 import com.springboot.bookMyShow.util.ResponceStructure;
 
 @Service
@@ -17,15 +21,22 @@ public class BookingService {
 	@Autowired
 	BookingDao  bDao;
 	
-	public ResponseEntity<ResponceStructure<Booking>> saveBooking(Booking booking)
+	@Autowired
+	UserDao uDao;
+	public ResponseEntity<ResponceStructure<Booking>> saveBooking(Booking booking,String uEmail,String uPassword)
 	{
-		ResponceStructure<Booking> str = new ResponceStructure<Booking>();
-		
-		str.setMessage("booking has done");
-		str.setStatus(HttpStatus.CREATED.value());
-		str.setData(bDao.saveBooking(booking));
-		
-		return new ResponseEntity<ResponceStructure<Booking>>(str,HttpStatus.CREATED);
+		User exu=uDao.userLogin(uEmail, uPassword);
+		if(exu!=null)
+		{
+			ResponceStructure<Booking> str = new ResponceStructure<Booking>();
+			
+			str.setMessage("booking has done");
+			str.setStatus(HttpStatus.CREATED.value());
+			str.setData(bDao.saveBooking(booking));
+			
+			return new ResponseEntity<ResponceStructure<Booking>>(str,HttpStatus.CREATED);
+		}
+		throw new LoginFailed("Enter the valid email & password");
 	}
 	
 	public ResponseEntity<ResponceStructure<Booking>> findBooking(int bId)
@@ -40,43 +51,53 @@ public class BookingService {
 			str.setData(b);
 			return new ResponseEntity<ResponceStructure<Booking>>(str,HttpStatus.FOUND);
 		}
-		return null;
+		throw new BookingNotFound("booking not found with the given id"+bId);
 	}
 	
-	public ResponseEntity<ResponceStructure<Booking>> deleteBooking(int bId)
+	public ResponseEntity<ResponceStructure<Booking>> deleteBooking(int bId,String uEmail,String uPassword)
 	{
-		ResponceStructure<Booking> str= new ResponceStructure<Booking>();
-		
-		Booking b= bDao.findBooking(bId);
-		if(b!=null)
+		User exu=uDao.userLogin(uEmail, uPassword);
+		if(exu!=null)
 		{
-			str.setMessage("Booking has Deleted");
-			str.setStatus(HttpStatus.OK.value());
-			str.setData(bDao.deleteBooking(bId));
+			ResponceStructure<Booking> str= new ResponceStructure<Booking>();
 			
-			return new ResponseEntity<ResponceStructure<Booking>>(str,HttpStatus.OK);
+			Booking b= bDao.findBooking(bId);
+			if(b!=null)
+			{
+				str.setMessage("Booking has Deleted");
+				str.setStatus(HttpStatus.OK.value());
+				str.setData(bDao.deleteBooking(bId));
+				
+				return new ResponseEntity<ResponceStructure<Booking>>(str,HttpStatus.OK);
+			}
+			throw new BookingNotFound("booking not found with the given id"+bId);
 		}
-		return null;
+		throw new LoginFailed("Enter the valid email & password");
 	}
 	
-	public ResponseEntity<ResponceStructure<Booking>> updateBooking(Booking booking,int bId)
+	public ResponseEntity<ResponceStructure<Booking>> updateBooking(Booking booking,int bId,String uEmail,String uPassword)
 	{
-		ResponceStructure<Booking> str=new  ResponceStructure<Booking>();
-		
-		Booking b=bDao.findBooking(bId);
-		if(b!=null)
+		User exu=uDao.userLogin(uEmail, uPassword);
+		if(exu!=null)
 		{
-			str.setMessage("Booking has updated");
-			str.setStatus(HttpStatus.OK.value());
-			str.setData(bDao.updateBooking(booking, bId));
+			ResponceStructure<Booking> str=new  ResponceStructure<Booking>();
 			
-			return new ResponseEntity<ResponceStructure<Booking>>(str, HttpStatus.OK);
+			Booking b=bDao.findBooking(bId);
+			if(b!=null)
+			{
+				str.setMessage("Booking has updated");
+				str.setStatus(HttpStatus.OK.value());
+				str.setData(bDao.updateBooking(booking, bId));
+				
+				return new ResponseEntity<ResponceStructure<Booking>>(str, HttpStatus.OK);
+			}
+			throw new BookingNotFound("booking not found with the given id"+bId);
 		}
-		return null;
+		throw new LoginFailed("Enter the valid email & password");
 		
 	}
 	
-	public ResponseEntity<ResponceStructure<List<Booking>>> findAllBoiking()
+	public ResponseEntity<ResponceStructure<List<Booking>>> findAllBooking()
 	{
 		ResponceStructure<List<Booking>> str=new ResponceStructure<List<Booking>>();
 		List<Booking> bList=bDao.findAllBooking();
@@ -89,7 +110,7 @@ public class BookingService {
 			
 			return new ResponseEntity<ResponceStructure<List<Booking>>>(str,HttpStatus.FOUND);
 		}
-		return null;
+		throw new BookingNotFound("booking not found ");
 	}
 	
 }

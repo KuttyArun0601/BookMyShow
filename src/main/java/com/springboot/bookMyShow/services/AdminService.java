@@ -10,8 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.springboot.bookMyShow.Entity.Admin;
+import com.springboot.bookMyShow.Entity.Theatre;
 import com.springboot.bookMyShow.dao.AdminDao;
+import com.springboot.bookMyShow.dao.TheatreDao;
 import com.springboot.bookMyShow.dto.AdminDto;
+import com.springboot.bookMyShow.exceptions.AdminNotFound;
+import com.springboot.bookMyShow.exceptions.LoginFailed;
 import com.springboot.bookMyShow.util.ResponceStructure;
 
 @Service
@@ -19,6 +23,9 @@ public class AdminService {
 
 	@Autowired
 	AdminDao aDao;
+	
+	@Autowired
+	TheatreDao tDao;
 	
 	AdminDto aDto= new AdminDto();
 	ModelMapper mapper =new  ModelMapper();
@@ -51,7 +58,7 @@ public class AdminService {
 			return new  ResponseEntity<ResponceStructure<AdminDto>>(str,HttpStatus.FOUND);
 			
 		}
-		return null;
+		throw new AdminNotFound("Admin not found with the given id "+aId);
 	}
 	
 	public ResponseEntity<ResponceStructure<AdminDto>> deleteAdmin(int aId ,String aEmail,String aPassword)
@@ -72,9 +79,9 @@ public class AdminService {
 				return new ResponseEntity<ResponceStructure<AdminDto>>(str,HttpStatus.OK);
 				
 			}
-			return null;
+			throw new AdminNotFound("Admin not found with the given id "+aId);
 		}
-		return null;
+		throw new LoginFailed("Enter the valid email & password");
 	}
 	
 	public ResponseEntity<ResponceStructure<AdminDto>> updateAdmin(Admin admin,int aId,String aEmail,String aPassword)
@@ -94,9 +101,9 @@ public class AdminService {
 				
 				return new ResponseEntity<ResponceStructure<AdminDto>>(str,HttpStatus.OK);
 			}
-			return null;
+			throw new AdminNotFound("Admin not found with the given id "+aId);
 		}
-		return null;
+		throw new LoginFailed("Enter the valid email & password");
 	}
 	
 	public ResponseEntity<ResponceStructure<List<AdminDto>>> findAllAdmin()
@@ -116,7 +123,29 @@ public class AdminService {
 			str.setData(aDtoList);
 			return new ResponseEntity<ResponceStructure<List<AdminDto>>>(str,HttpStatus.FOUND);
 		}
-		return null ;
+		throw new AdminNotFound("Admin not found");
+	}
+	
+	public ResponseEntity<ResponceStructure<Admin>> deleteTheatreFromAdmin(int aId,int tId,String aEmail, String aPassword)
+	{
+		Admin a=aDao.findAdmin(aId);
+		List<Theatre> tList=a.getATheatre();
+		ResponceStructure<Admin> str= new ResponceStructure<Admin>();
+		for (Theatre theatre : tList) {
+			int id=theatre.getTId();
+			if(id==tId)
+			{
+				tDao.deleteTheatre(id);
+				str.setMessage(theatre.getTName()+" is deleted from "+a.getAName());
+				str.setStatus(HttpStatus.OK.value());
+				str.setData(aDao.updateAdmin(a, a.getAId()));
+				
+				return new ResponseEntity<ResponceStructure<Admin>>(str,HttpStatus.OK);
+			}
+			return null;
+		}
+		return null;
+		
 	}
 	
 //	public ResponseEntity<ResponceStructure<AdminDto>> verifyAdmin(String aEmail,String aPassword)

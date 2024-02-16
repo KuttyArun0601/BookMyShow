@@ -11,6 +11,9 @@ import com.springboot.bookMyShow.Entity.Admin;
 import com.springboot.bookMyShow.Entity.Shows;
 import com.springboot.bookMyShow.dao.AdminDao;
 import com.springboot.bookMyShow.dao.ShowsDao;
+import com.springboot.bookMyShow.exceptions.LoginFailed;
+import com.springboot.bookMyShow.exceptions.SeatsNotFound;
+import com.springboot.bookMyShow.exceptions.ShowsNotFound;
 import com.springboot.bookMyShow.util.ResponceStructure;
 
 @Service
@@ -35,7 +38,7 @@ public class ShowsService {
 			
 			return new ResponseEntity<ResponceStructure<Shows>>(str,HttpStatus.CREATED);
 		}
-		return null;
+		throw new LoginFailed("Enter valid email & passworrd");
 		
 	}
 	
@@ -51,7 +54,7 @@ public class ShowsService {
 			
 			return new ResponseEntity<ResponceStructure<Shows>>(str,HttpStatus.FOUND);
 		}
-		return null;
+		throw new ShowsNotFound("Shows not found with the given id"+sId);
 	}
 	
 	public ResponseEntity<ResponceStructure<Shows>> deleteShows(int sId ,String aEmail,String aPassword)
@@ -71,9 +74,9 @@ public class ShowsService {
 				
 				return new ResponseEntity<ResponceStructure<Shows>>(str,HttpStatus.OK);
 			}
-			return null;
+			throw new ShowsNotFound("Shows not found with the given id"+sId);
 		}
-		return null;
+		throw new LoginFailed("Enter valid email & passworrd");
 		
 	}
 	
@@ -93,9 +96,9 @@ public class ShowsService {
 				
 				return new ResponseEntity<ResponceStructure<Shows>>(str, HttpStatus.OK);
 			}
-			return null;
+			throw new ShowsNotFound("Shows not found with the given id"+sId);
 		}
-		return null;
+		throw new LoginFailed("Enter valid email & passworrd");
 		
 	}
 	
@@ -113,7 +116,7 @@ public class ShowsService {
 			return new ResponseEntity<ResponceStructure<List<Shows>>>(str,HttpStatus.FOUND);
 			
 		}
-		return null;
+		throw new ShowsNotFound("Shows not found");
 	}
 
 	

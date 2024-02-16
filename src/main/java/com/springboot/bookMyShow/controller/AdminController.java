@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,15 +19,17 @@ import com.springboot.bookMyShow.dto.AdminDto;
 import com.springboot.bookMyShow.services.AdminService;
 import com.springboot.bookMyShow.util.ResponceStructure;
 
+import jakarta.validation.Valid;
+
 @RestController
-@RequestMapping("Admin")
+@RequestMapping("admin")
 public class AdminController {
 	
 	@Autowired
 	AdminService aService;
 	
 	@PostMapping("save")
-	public  ResponseEntity<ResponceStructure<AdminDto>> saveAdmin(@RequestBody Admin admin)
+	public  ResponseEntity<ResponceStructure<AdminDto>> saveAdmin(@Valid @RequestBody Admin admin, BindingResult result)
 	{
 		return aService.saveAdmin(admin);
 	}
