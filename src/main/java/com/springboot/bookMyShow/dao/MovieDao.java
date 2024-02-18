@@ -57,5 +57,10 @@ public class MovieDao {
 		return movie;
 	}
 	
+	public Movie findmTitle(String mTitle)
+	{
+		return mRepo.findBymTitle(mTitle);
+	}
+	
 	
 }

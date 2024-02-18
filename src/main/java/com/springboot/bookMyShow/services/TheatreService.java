@@ -8,9 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.springboot.bookMyShow.Entity.Admin;
+import com.springboot.bookMyShow.Entity.Shows;
 import com.springboot.bookMyShow.Entity.Theatre;
 import com.springboot.bookMyShow.dao.AdminDao;
+import com.springboot.bookMyShow.dao.ShowsDao;
 import com.springboot.bookMyShow.dao.TheatreDao;
+import com.springboot.bookMyShow.exceptions.AdminNotFound;
 import com.springboot.bookMyShow.exceptions.LoginFailed;
 import com.springboot.bookMyShow.exceptions.ShowsNotFound;
 import com.springboot.bookMyShow.exceptions.TheatreNotFound;
@@ -24,6 +27,9 @@ public class TheatreService {
 	
 	@Autowired
 	AdminDao aDao;
+	
+	@Autowired
+	ShowsDao sDao;
 	
 	public ResponseEntity<ResponceStructure<Theatre>> saveTheatre(Theatre theatre ,String aEmail,String aPassword)
 	{
@@ -119,5 +125,34 @@ public class TheatreService {
 		}
 		throw new TheatreNotFound("Theatre not found ");
 	}
+	
+	public ResponseEntity<ResponceStructure<Theatre>> deleteShowFromTheatre(int tId, int sId, String aEmail, String aPassword)
+	{
+		Admin a =aDao.adminLogin(aEmail, aPassword);
+		if(a!=null)
+		{
+			Shows show=sDao.findShows(sId);
+			Theatre t=tDao.findTheatre(tId);
+			List<Shows> sList=sDao.findAllShows();
+			ResponceStructure<Theatre> str=new ResponceStructure<Theatre>();
+			for (Shows s : sList) {
+				if(s.getSId()==sId)
+				{
+					sList.remove(show);
+					t.setTShows(sList);
+					sDao.deleteShows(sId);
+					str.setMessage("removed");
+					str.setStatus(HttpStatus.OK.value());
+					str.setData(tDao.updatetheatre(t, tId));
+					
+					return new ResponseEntity<ResponceStructure<Theatre>>(str,HttpStatus.OK);
+				}
+				throw new ShowsNotFound("Shows not found with the given id");
+			}
+			throw new ShowsNotFound("Shows not found with the given id");
+		}
+		throw new AdminNotFound("Enter valid email & passworrd");
+		
+ 	}
 	
 }

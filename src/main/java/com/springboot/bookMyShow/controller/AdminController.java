@@ -58,6 +58,18 @@ public class AdminController {
 		return aService.findAllAdmin();
 	}
 	
+	
+	@PutMapping("assignTheatre")
+	public ResponseEntity<ResponceStructure<AdminDto>> assignTheatre(@RequestParam int aId,@RequestParam int tId,@RequestParam String aEmail,@RequestParam String aPassword)
+	{
+		return aService.assignTheatreToAdmin(aId, tId, aEmail, aPassword);
+	}
+	@PutMapping("deleteTheatre")
+	public ResponseEntity<ResponceStructure<AdminDto>> deleteTheatre(@RequestParam int aId,@RequestParam int tId,@RequestParam String aEmail,@RequestParam String aPassword)
+	{
+		return aService.assignTheatreToAdmin(aId, tId, aEmail, aPassword);
+	}
+	
 //	@GetMapping("verify")
 //	public ResponseEntity<ResponceStructure<AdminDto>> verifyAdmin(String aEmail,String aPassword)
 //	{

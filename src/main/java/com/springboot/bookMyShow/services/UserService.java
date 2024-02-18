@@ -8,14 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import com.springboot.bookMyShow.Entity.Booking;
 import com.springboot.bookMyShow.Entity.User;
-
+import com.springboot.bookMyShow.dao.BookingDao;
 import com.springboot.bookMyShow.dao.UserDao;
 
 import com.springboot.bookMyShow.dto.UserDto;
+import com.springboot.bookMyShow.exceptions.BookingNotFound;
 import com.springboot.bookMyShow.exceptions.LoginFailed;
-import com.springboot.bookMyShow.exceptions.TicketNotFound;
 import com.springboot.bookMyShow.exceptions.UserNotFound;
 import com.springboot.bookMyShow.util.ResponceStructure;
 
@@ -25,17 +25,19 @@ public class UserService {
 	@Autowired
 	UserDao uDao;
 	
-	UserDto uDto = new UserDto();
+	@Autowired
+	BookingDao bDao;
+	
 	ModelMapper mapper=new ModelMapper();
 	
 	public ResponseEntity<ResponceStructure<UserDto>> saveUser(User user)
 	{
 		
 			ResponceStructure<UserDto> str = new ResponceStructure<UserDto>();
-			
+			UserDto uDto = new UserDto();
 			mapper.map(uDao.saveUser(user), uDto);
 			
-			str.setMessage(user.getUName()+"User has Saved");
+			str.setMessage(user.getUName()+" User has Saved");
 			str.setStatus(HttpStatus.CREATED.value());
 			str.setData(uDto);
 			
@@ -48,6 +50,7 @@ public class UserService {
 	{
 		ResponceStructure<UserDto> str= new ResponceStructure<UserDto>();
 		User u=uDao.findUser(uId);
+		UserDto uDto = new UserDto();
 		if(u!=null)
 		{
 			mapper.map(u, uDto);
@@ -70,6 +73,7 @@ public class UserService {
 			ResponceStructure<UserDto> str= new ResponceStructure<UserDto>();
 			
 			User exu=uDao.findUser(uId);
+			UserDto uDto = new UserDto();
 			if(exu!=null)
 			{
 				mapper.map(uDao.deleteUser(uId), uDto);
@@ -94,6 +98,7 @@ public class UserService {
 			ResponceStructure<UserDto> str=new ResponceStructure<UserDto>();
 			
 			User exu=uDao.findUser(uId);
+			UserDto uDto = new UserDto();
 			if(exu!=null)
 			{
 				mapper.map(uDao.updateUser(user, uId), uDto);
@@ -117,8 +122,9 @@ public class UserService {
 		List<UserDto> udList= new ArrayList<UserDto>();
 		if(!uList.isEmpty())
 		{
+			
 			for (User u : uList) {
-				
+				UserDto uDto = new UserDto();
 				mapper.map(u, uDto);
 				udList.add(uDto);
 			}
@@ -132,6 +138,93 @@ public class UserService {
 			
 		}
 		throw new UserNotFound("User not found");
+	}
+	
+	public ResponseEntity<ResponceStructure<UserDto>> assignBookingToUser(int uId,int bId,String uEmail,String uPassword)
+	{
+		User vu=uDao.userLogin(uEmail, uPassword);
+		if(vu!=null)
+		{
+			ResponceStructure<UserDto> str = new ResponceStructure<UserDto>();
+			User u=uDao.findUser(uId);
+			UserDto uDto= new UserDto();
+			List<Booking> bList=u.getUBooking();
+			Booking b=bDao.findBooking(bId);
+			if(u!=null && b!=null)
+			{
+				bList.add(b);
+				mapper.map(uDao.updateUser(u, uId), uDto);
+				str.setMessage("booking assigned to user");
+				str.setStatus(HttpStatus.OK.value());
+				str.setData(uDto);
+				
+				return new ResponseEntity<ResponceStructure<UserDto>>(str,HttpStatus.OK);
+				
+			}
+			throw new BookingNotFound("booking not founded with the given id "+bId);
+		}
+		throw new LoginFailed("Enter valid email & password");
+	}
+	
+	public ResponseEntity<ResponceStructure<UserDto>> deleteBookingFromUser(int uId, int bId,String uEmail,String uPassword)
+	{
+		User vu=uDao.userLogin(uEmail, uPassword);
+		if(vu!=null)
+		{
+			User u=uDao.findUser(uId);
+			UserDto uDto= new UserDto();
+			Booking b=bDao.findBooking(bId);
+			List<Booking> bList=u.getUBooking();
+			ResponceStructure<UserDto> str=new ResponceStructure<UserDto>();
+			for (Booking booking : bList) {
+				
+				if(booking.getBId()==bId)
+				{
+					bList.remove(b);
+					u.setUBooking(bList);
+					bDao.deleteBooking(bId);
+					mapper.map(uDao.updateUser(u, uId), uDto);
+					str.setMessage("booking has deleted from user");
+					str.setStatus(HttpStatus.OK.value());
+					str.setData(uDto);
+					
+					return new ResponseEntity<ResponceStructure<UserDto>>(str,HttpStatus.OK);
+				}
+				throw new BookingNotFound("booking not fount with the given id");
+			}
+			throw new BookingNotFound("booking not fount with the given id");
+		}
+		throw new LoginFailed("enter valid email & password");
+	}
+	
+	public ResponseEntity<ResponceStructure<UserDto>> removeBookingFromUser(int uId, int bId,String uEmail,String uPassword)
+	{
+		User vu=uDao.userLogin(uEmail, uPassword);
+		if(vu!=null)
+		{
+			User u=uDao.findUser(uId);
+			UserDto uDto= new UserDto();
+			Booking b=bDao.findBooking(bId);
+			List<Booking> bList=u.getUBooking();
+			ResponceStructure<UserDto> str=new ResponceStructure<UserDto>();
+			for (Booking booking : bList) {
+				
+				if(booking.getBId()==bId)
+				{
+					bList.remove(b);
+					u.setUBooking(bList);
+					mapper.map(uDao.updateUser(u, uId), uDto);
+					str.setMessage("booking has removed from user");
+					str.setStatus(HttpStatus.OK.value());
+					str.setData(uDto);
+					
+					return new ResponseEntity<ResponceStructure<UserDto>>(str,HttpStatus.OK);
+				}
+				throw new BookingNotFound("booking not fount with the given id");
+			}
+			throw new BookingNotFound("booking not fount with the given id");
+		}
+		throw new LoginFailed("enter valid email & password");
 	}
 	
 //	

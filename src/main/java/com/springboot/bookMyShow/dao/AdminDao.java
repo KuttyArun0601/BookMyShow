@@ -52,8 +52,8 @@ public class AdminDao {
 	
 	public List<Admin> findAllAdmin()
 	{
-		List<Admin> admin = aRepo.findAll();
-		return admin;
+		
+		return aRepo.findAll();
 	}
 	
 	public Admin adminLogin(String aEmail,String aPassword) {

@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.springboot.bookMyShow.bEnum.TheatreName;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,7 +29,7 @@ public class Theatre {
 	private int tId;;
 	@NotNull(message = "name can't be not null")
 	@NotBlank(message = "name can't be not blank")
-	private TheatreName tName;
+	private String tName;
 	@NotNull(message = "location can't be not null")
 	@NotBlank(message = "location can't be not blank")
 	private String tLocation;

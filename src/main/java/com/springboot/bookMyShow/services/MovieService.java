@@ -30,7 +30,7 @@ public class MovieService {
 		if(exa!=null)
 		{
 			ResponceStructure<Movie> str=new ResponceStructure<Movie>();
-			
+			movie.setMTitle(movie.getMTitle().toLowerCase());
 			str.setMessage(movie.getMTitle()+" Movie has saved");
 			str.setStatus(HttpStatus.CREATED.value());
 			str.setData(mDao.saveMovie(movie));

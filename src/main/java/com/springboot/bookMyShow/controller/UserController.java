@@ -29,13 +29,13 @@ public class UserController {
 	UserService uService;
 	
 	@PostMapping("save")
-	public ResponseEntity<ResponceStructure<UserDto>> saveUser(@Valid User user,BindingResult result)
+	public ResponseEntity<ResponceStructure<UserDto>> saveUser(@Valid @RequestBody User user,BindingResult result)
 	{
 		return uService.saveUser(user);
 	}
 	
 	@GetMapping("find")
-	public ResponseEntity<ResponceStructure<UserDto>> findUser(int uId)
+	public ResponseEntity<ResponceStructure<UserDto>> findUser(@RequestParam int uId)
 	{
 		return uService.findUser(uId);
 	}

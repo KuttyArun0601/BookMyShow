@@ -1,7 +1,6 @@
 package com.springboot.bookMyShow.Entity;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import org.springframework.stereotype.Component;
 
@@ -11,9 +10,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,11 +33,18 @@ public class Booking {
 	@Min(value = 1,message = "booking allowed minimum 1 ticket")
 	@Max(value = 5,message = "booking allowed maximum 5 ticket only")
 	private int bNoOfTicket;
+	@NotNull(message = "enter movie name")
+	@NotBlank(message = "enter movie name")
+	private String bMovieName;
 	private double bprice;
 	private LocalDate bDate;
+	private int bseats;
 	
-	@OneToMany(cascade = CascadeType.ALL)
-	private List<Ticket> bTicket;
+	@OneToOne(cascade = CascadeType.ALL)
+	private Shows bShows;
+	
+//	@OneToMany(cascade = CascadeType.ALL)
+//	private List<Ticket> bTicket;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	private User bUser;

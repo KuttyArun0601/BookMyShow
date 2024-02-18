@@ -12,7 +12,6 @@ import com.springboot.bookMyShow.Entity.Shows;
 import com.springboot.bookMyShow.dao.AdminDao;
 import com.springboot.bookMyShow.dao.ShowsDao;
 import com.springboot.bookMyShow.exceptions.LoginFailed;
-import com.springboot.bookMyShow.exceptions.SeatsNotFound;
 import com.springboot.bookMyShow.exceptions.ShowsNotFound;
 import com.springboot.bookMyShow.util.ResponceStructure;
 

@@ -8,11 +8,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.springboot.bookMyShow.Entity.Booking;
+import com.springboot.bookMyShow.Entity.Movie;
+import com.springboot.bookMyShow.Entity.Shows;
 import com.springboot.bookMyShow.Entity.User;
 import com.springboot.bookMyShow.dao.BookingDao;
+import com.springboot.bookMyShow.dao.MovieDao;
+import com.springboot.bookMyShow.dao.ShowsDao;
 import com.springboot.bookMyShow.dao.UserDao;
 import com.springboot.bookMyShow.exceptions.BookingNotFound;
 import com.springboot.bookMyShow.exceptions.LoginFailed;
+import com.springboot.bookMyShow.exceptions.ShowsNotFound;
 import com.springboot.bookMyShow.util.ResponceStructure;
 
 @Service
@@ -23,13 +28,31 @@ public class BookingService {
 	
 	@Autowired
 	UserDao uDao;
+	
+	@Autowired
+	MovieDao mDao;
+	
+	@Autowired
+	ShowsDao sDao;
+	
 	public ResponseEntity<ResponceStructure<Booking>> saveBooking(Booking booking,String uEmail,String uPassword)
 	{
 		User exu=uDao.userLogin(uEmail, uPassword);
 		if(exu!=null)
 		{
 			ResponceStructure<Booking> str = new ResponceStructure<Booking>();
-			
+			int noOfTickets=booking.getBNoOfTicket();
+			Movie exm=mDao.findmTitle(booking.getBMovieName().toLowerCase());
+			double price=0;
+			int seats=0;
+			int i = 0;
+			while (i < noOfTickets) {
+				price=exm.getPrice()+price;
+				seats++;
+				i++;
+			}
+			booking.setBprice(price);
+			booking.setBseats(seats);
 			str.setMessage("booking has done");
 			str.setStatus(HttpStatus.CREATED.value());
 			str.setData(bDao.saveBooking(booking));
@@ -113,4 +136,25 @@ public class BookingService {
 		throw new BookingNotFound("booking not found ");
 	}
 	
+	public ResponseEntity<ResponceStructure<Booking>> assignShowToBooking(int bId,String uEmail,String uPassword)
+	{
+		ResponceStructure<Booking> str= new ResponceStructure<Booking>();
+		
+		
+		Booking exb=bDao.findBooking(bId);
+		Movie m= mDao.findmTitle(exb.getBMovieName());
+		Shows exs=sDao.findShows(m.getMShow().getSId());
+		
+		if(exs!=null)
+		{
+			exb.setBShows(exs);
+			str.setMessage("Show is assigned to booking");
+			str.setStatus(HttpStatus.OK.value());
+			str.setData(bDao.updateBooking(exb, bId));
+			
+			return new ResponseEntity<ResponceStructure<Booking>>(str,HttpStatus.OK);
+		}
+		throw new ShowsNotFound("Show not found with the given id");
+		
+	}
 }

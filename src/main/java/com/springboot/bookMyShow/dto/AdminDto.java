@@ -1,5 +1,8 @@
 package com.springboot.bookMyShow.dto;
 
+import java.util.List;
+
+import com.springboot.bookMyShow.Entity.Theatre;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,4 +15,7 @@ public class AdminDto {
 	private long aContact;
 	private String aEmail;	
 	
+	private List<Theatre> aTheatre;
+	
+	private List<UserDto> aUser; 
 }
