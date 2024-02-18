@@ -33,12 +33,13 @@ public class AdminService {
 	@Autowired
 	UserDao uDao;
 	
-	ModelMapper mapper =new  ModelMapper();
+	
 	
 	public ResponseEntity<ResponceStructure<AdminDto>> saveAdmin(Admin admin)
 	{
 		ResponceStructure<AdminDto> str= new ResponceStructure<AdminDto>();
 		AdminDto aDto= new AdminDto();
+		ModelMapper mapper =new  ModelMapper();
 		mapper.map(aDao.saveAdmin(admin), aDto);
 		
 		str.setMessage(admin.getAName()+"Admin has Saved");
@@ -53,6 +54,7 @@ public class AdminService {
 		ResponceStructure<AdminDto> str= new ResponceStructure<AdminDto>();
 		AdminDto aDto= new AdminDto();
 		Admin a = aDao.findAdmin(aId);
+		ModelMapper mapper =new  ModelMapper();
 		mapper.map(a, aDto);
 		if(a!=null)
 		{
@@ -77,6 +79,7 @@ public class AdminService {
 			if(a!=null)
 			{
 				Admin delA=aDao.deleteAdmin(aId);
+				ModelMapper mapper =new  ModelMapper();
 				mapper.map(delA, aDto);
 				
 				str.setMessage("Admin ha Deleted");
@@ -101,6 +104,7 @@ public class AdminService {
 			Admin a=aDao.findAdmin(aId);
 			if(a!=null)
 			{
+				ModelMapper mapper =new  ModelMapper();
 				mapper.map(aDao.updateAdmin(admin, aId), aDto);
 				
 				str.setMessage(admin.getAName()+"Admin has Updated");
@@ -124,6 +128,7 @@ public class AdminService {
 			for(Admin a : adList  )
 			{
 				AdminDto aDto= new AdminDto();
+				ModelMapper mapper =new  ModelMapper();
 				mapper.map(a,aDto);
 				aDtoList.add(aDto);
 				
@@ -144,11 +149,14 @@ public class AdminService {
 		{
 			Admin a=aDao.findAdmin(aId);
 			AdminDto aDto = new AdminDto();
+			ModelMapper mapper =new  ModelMapper();
 			Theatre t= tDao.findTheatre(tId);
 			List<Theatre> tList=a.getATheatre();
 			ResponceStructure<AdminDto> str= new ResponceStructure<AdminDto>();
 			if (a!=null && t != null) {
 				tList.add(t);
+				a.setATheatre(tList);
+				
 				mapper.map(aDao.updateAdmin(a, aId), aDto);
 				str.setMessage("Theatre assigned to the admin");
 				str.setStatus(HttpStatus.OK.value());
@@ -177,7 +185,39 @@ public class AdminService {
 //					tList.remove(tId);
 					a.setATheatre(tList);
 					tDao.deleteTheatre(id);
-					str.setMessage(theatre.getTName()+" is deleted from "+a.getAName());
+					str.setMessage("theatre is deleted from "+a.getAName());
+					str.setStatus(HttpStatus.OK.value());
+					str.setData(aDao.updateAdmin(a, a.getAId()));
+					
+					return new ResponseEntity<ResponceStructure<Admin>>(str,HttpStatus.OK);
+				}
+				throw new TheatreNotFound("theatre not found with the given id");
+			}
+			return null;
+		}
+		throw new AdminNotFound("Enter valid email & password");
+		
+	}
+	
+
+	public ResponseEntity<ResponceStructure<Admin>> removeTheatreFromAdmin(int aId,int tId,String aEmail, String aPassword)
+	{
+		Admin va=aDao.adminLogin(aEmail, aPassword);
+		if(va!=null)
+		{
+			Theatre t= tDao.findTheatre(tId);
+			Admin a=aDao.findAdmin(aId);
+			List<Theatre> tList=a.getATheatre();
+			
+			ResponceStructure<Admin> str= new ResponceStructure<Admin>();
+			for (Theatre theatre : tList) {
+				int id=theatre.getTId();
+				if(id==tId)
+				{
+					tList.remove(t);
+//					tList.remove(tId);
+					a.setATheatre(tList);
+					str.setMessage("theatre is removed from "+a.getAName());
 					str.setStatus(HttpStatus.OK.value());
 					str.setData(aDao.updateAdmin(a, a.getAId()));
 					
@@ -198,6 +238,7 @@ public class AdminService {
 		{
 			Admin a=aDao.findAdmin(aId);
 			AdminDto aDto = new AdminDto();
+			ModelMapper mapper =new  ModelMapper();
 			User u= uDao.findUser(uId);
 			List<User> uList=a.getAUser();
 			ResponceStructure<AdminDto> str= new ResponceStructure<AdminDto>();
@@ -276,36 +317,7 @@ public class AdminService {
 	}
 	
 	
-//	public ResponseEntity<ResponceStructure<Admin>> removeTheatreFromAdmin(int aId,int tId,String aEmail, String aPassword)
-//	{
-//		Admin va=aDao.adminLogin(aEmail, aPassword);
-//		if(va!=null)
-//		{
-//			Theatre t= tDao.findTheatre(tId);
-//			Admin a=aDao.findAdmin(aId);
-//			List<Theatre> tList=a.getATheatre();
-//			ResponceStructure<Admin> str= new ResponceStructure<Admin>();
-//			for (Theatre theatre : tList) {
-//				int id=theatre.getTId();
-//				if(id==tId)
-//				{
-//					
-//					tList.remove(t);
-//					a.setATheatre(tList);
-//					tDao.deleteTheatre(id);
-//					str.setMessage(theatre.getTName()+" is deleted from "+a.getAName());
-//					str.setStatus(HttpStatus.OK.value());
-//					str.setData(aDao.updateAdmin(a, a.getAId()));
-//					
-//					return new ResponseEntity<ResponceStructure<Admin>>(str,HttpStatus.OK);
-//				}
-//				throw new TheatreNotFound("");
-//			}
-//			return null;
-//		}
-//		throw new AdminNotFound("Enter valid email & password");
-//		
-//	}
+//	
 	
 //	public ResponseEntity<ResponceStructure<AdminDto>> verifyAdmin(String aEmail,String aPassword)
 //	{

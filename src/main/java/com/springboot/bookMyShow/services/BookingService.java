@@ -2,6 +2,7 @@ package com.springboot.bookMyShow.services;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import com.springboot.bookMyShow.Entity.Shows;
 import com.springboot.bookMyShow.Entity.User;
 import com.springboot.bookMyShow.dao.BookingDao;
 import com.springboot.bookMyShow.dao.MovieDao;
+import com.springboot.bookMyShow.dao.SeatsDao;
 import com.springboot.bookMyShow.dao.ShowsDao;
 import com.springboot.bookMyShow.dao.UserDao;
 import com.springboot.bookMyShow.exceptions.BookingNotFound;
@@ -35,6 +37,11 @@ public class BookingService {
 	@Autowired
 	ShowsDao sDao;
 	
+	@Autowired
+	SeatsDao seatDao;
+	
+	ModelMapper mapper=new ModelMapper();
+	
 	public ResponseEntity<ResponceStructure<Booking>> saveBooking(Booking booking,String uEmail,String uPassword)
 	{
 		User exu=uDao.userLogin(uEmail, uPassword);
@@ -43,16 +50,11 @@ public class BookingService {
 			ResponceStructure<Booking> str = new ResponceStructure<Booking>();
 			int noOfTickets=booking.getBNoOfTicket();
 			Movie exm=mDao.findmTitle(booking.getBMovieName().toLowerCase());
-			double price=0;
-			int seats=0;
-			int i = 0;
-			while (i < noOfTickets) {
-				price=exm.getPrice()+price;
-				seats++;
-				i++;
-			}
-			booking.setBprice(price);
-			booking.setBseats(seats);
+			
+			booking.setBprice(exm.getMprice()*noOfTickets);
+			booking.setBDate(exm.getMDate());
+			booking.setBseats(noOfTickets);
+			booking.setBShows(exm.getMShow());
 			str.setMessage("booking has done");
 			str.setStatus(HttpStatus.CREATED.value());
 			str.setData(bDao.saveBooking(booking));
@@ -65,10 +67,11 @@ public class BookingService {
 	public ResponseEntity<ResponceStructure<Booking>> findBooking(int bId)
 	{
 		ResponceStructure<Booking> str= new ResponceStructure<Booking>();
-		
 		Booking b=bDao.findBooking(bId);
+		
 		if(b!=null)
 		{
+			
 			str.setMessage("Booking has founded");
 			str.setStatus(HttpStatus.FOUND.value());
 			str.setData(b);
@@ -157,4 +160,18 @@ public class BookingService {
 		throw new ShowsNotFound("Show not found with the given id");
 		
 	}
+	
+//	public ResponseEntity<ResponceStructure<Booking>> findUserByBooking(int bId,String uEmail,String uPassword)
+//	{
+//		User exu=uDao.userLogin(uEmail, uPassword);
+//		if(exu!=null)
+//		{
+//			
+//			ResponceStructure<Booking> str=new ResponceStructure<Booking>();
+//			mapper.map(u, uDto);
+//			
+//		}
+//		throw new LoginFailed("Enter valid email & password");
+//	}
+	
 }

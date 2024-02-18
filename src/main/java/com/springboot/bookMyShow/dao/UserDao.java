@@ -59,6 +59,7 @@ public class UserDao {
 	
 	public User userLogin(String uEmail, String uPassword)
 	{
-		return uRepo.userLogin(uEmail, uPassword);
+		User u=uRepo.userLogin(uEmail, uPassword);
+		return u;
 	}
 }

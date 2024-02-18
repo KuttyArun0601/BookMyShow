@@ -1,10 +1,11 @@
 package com.springboot.bookMyShow.Entity;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 import org.springframework.stereotype.Component;
 
-import jakarta.persistence.CascadeType;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -37,9 +38,10 @@ public class Movie {
 	@Min(value = 3,message = "ratting must start above 3 ")
 	@Max(value = 10,message = "ratting must end before 10 ")
 	private double mRatting;
-	private double price;
-	private LocalTime duration;
+	private double mprice;
+	private LocalTime mduration;
+	private LocalDate mDate;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	private Shows mShow;
 }

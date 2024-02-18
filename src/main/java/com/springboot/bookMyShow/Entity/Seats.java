@@ -2,7 +2,6 @@ package com.springboot.bookMyShow.Entity;
 
 import org.springframework.stereotype.Component;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,6 +32,6 @@ public class Seats {
 	@Max(value = 50,message = "seats allowed maximum 50 only")
 	private int sNoOfSeats;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	private Shows sShow;
 }

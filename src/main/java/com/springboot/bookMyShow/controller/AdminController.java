@@ -65,11 +65,30 @@ public class AdminController {
 		return aService.assignTheatreToAdmin(aId, tId, aEmail, aPassword);
 	}
 	@PutMapping("deleteTheatre")
-	public ResponseEntity<ResponceStructure<AdminDto>> deleteTheatre(@RequestParam int aId,@RequestParam int tId,@RequestParam String aEmail,@RequestParam String aPassword)
+	public ResponseEntity<ResponceStructure<Admin>> deleteTheatre(@RequestParam int aId,@RequestParam int tId,@RequestParam String aEmail,@RequestParam String aPassword)
 	{
-		return aService.assignTheatreToAdmin(aId, tId, aEmail, aPassword);
+		return aService.deleteTheatreFromAdmin(aId, tId, aEmail, aPassword);
 	}
-	
+	@PutMapping("removeTheatre")
+	public ResponseEntity<ResponceStructure<Admin>> removeTheatre(@RequestParam int aId,@RequestParam int tId,@RequestParam String aEmail,@RequestParam String aPassword)
+	{
+		return aService.removeTheatreFromAdmin(aId, tId, aEmail, aPassword);
+	}
+	@PutMapping("assignUser")
+	public ResponseEntity<ResponceStructure<AdminDto>> assignUser(@RequestParam int aId,@RequestParam int uId,@RequestParam String aEmail,@RequestParam String aPassword)
+	{
+		return aService.assignTheatreToAdmin(aId, uId, aEmail, aPassword);
+	}
+	@PutMapping("deleteUser")
+	public ResponseEntity<ResponceStructure<Admin>> deleteUser(@RequestParam int aId,@RequestParam int uId,@RequestParam String aEmail,@RequestParam String aPassword)
+	{
+		return aService.deleteUserFromAdmin(aId, uId, aEmail, aPassword);
+	}
+	@PutMapping("removeUser")
+	public ResponseEntity<ResponceStructure<Admin>> removeUser(@RequestParam int aId,@RequestParam int uId,@RequestParam String aEmail,@RequestParam String aPassword)
+	{
+		return aService.removeUserFromAdmin(aId, uId, aEmail, aPassword);
+	}
 //	@GetMapping("verify")
 //	public ResponseEntity<ResponceStructure<AdminDto>> verifyAdmin(String aEmail,String aPassword)
 //	{

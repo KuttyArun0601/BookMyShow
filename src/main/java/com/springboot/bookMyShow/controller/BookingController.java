@@ -56,4 +56,10 @@ public class BookingController {
 	{
 		return bService.findAllBooking();
 	}
+	@PutMapping("assignShow")
+	public ResponseEntity<ResponceStructure<Booking>> assignShow( @RequestParam int bId,@RequestParam String uEmail, @RequestParam String uPassword)
+	{
+		return bService.assignShowToBooking(bId, uEmail, uPassword);
+	}
+	
 }

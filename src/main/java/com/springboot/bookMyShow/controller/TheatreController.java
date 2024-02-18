@@ -56,6 +56,20 @@ public class TheatreController {
 	{
 		return tService.findAllTheatre();
 	}
+	@PutMapping("assignShow")
+	public ResponseEntity<ResponceStructure<Theatre>> assignShow(@RequestParam int tId ,@RequestParam int sId ,@RequestParam String aEmail,@RequestParam String aPassword)
+	{
+		return tService.assignShowToTheatre(tId, sId, aEmail, aPassword);
+	}
+	@PutMapping("deleteShow")
+	public ResponseEntity<ResponceStructure<Theatre>> deleteShow(@RequestParam int tId ,@RequestParam int sId ,@RequestParam String aEmail,@RequestParam String aPassword)
+	{
+		return tService.deleteShowFromTheatre(tId, sId, aEmail, aPassword);
+	}
+	@PutMapping("removeShow")
+	public ResponseEntity<ResponceStructure<Theatre>> removeShow(@RequestParam int tId ,@RequestParam int sId ,@RequestParam String aEmail,@RequestParam String aPassword)
+	{
+		return tService.removeShowFromTheatre(tId, sId, aEmail, aPassword);
+	}
 	
-
 }

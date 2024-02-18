@@ -58,6 +58,21 @@ public class ShowsController {
 		return sService.findAllShows();
 	}
 	
+	@PutMapping("assignMovie")
+	public ResponseEntity<ResponceStructure<Shows>> assignMovieToShow(@RequestParam int mId,@RequestParam int sId,@RequestParam String aEmail,@RequestParam String aPassword)
+	{
+		return sService.assignMovieToShow(mId, sId, aEmail, aPassword);
+	}
+	@PutMapping("deleteMovie")
+	public ResponseEntity<ResponceStructure<Shows>> deleteMovieFromShow(@RequestParam int mId,@RequestParam int sId,@RequestParam String aEmail,@RequestParam String aPassword)
+	{
+		return sService.deleteMovieFromShow(mId, sId, aEmail, aPassword);
+	}
+	@PutMapping("removeMovie")
+	public ResponseEntity<ResponceStructure<Shows>> removeMovieFromShow(@RequestParam int mId,@RequestParam int sId,@RequestParam String aEmail,@RequestParam String aPassword)
+	{
+		return sService.removeMovieFromShow(mId, sId, aEmail, aPassword);
+	}
 
 
 }

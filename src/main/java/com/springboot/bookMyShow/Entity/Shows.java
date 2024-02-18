@@ -10,8 +10,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +28,9 @@ public class Shows
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int sId;
+	@NotNull(message = "show name can't be null")
+	@NotBlank(message = "show name can't be blank")
+	private String sName;
 	private LocalTime sStartTime;
 	private LocalTime sEndTime;
 	
@@ -33,5 +39,8 @@ public class Shows
 	
 	@OneToMany(cascade =CascadeType.ALL)
 	private List<Seats>  sSeats;
+	
+	@ManyToOne
+	private Theatre sTheatre;
 
 }

@@ -28,13 +28,14 @@ public class UserService {
 	@Autowired
 	BookingDao bDao;
 	
-	ModelMapper mapper=new ModelMapper();
+	
 	
 	public ResponseEntity<ResponceStructure<UserDto>> saveUser(User user)
 	{
 		
 			ResponceStructure<UserDto> str = new ResponceStructure<UserDto>();
 			UserDto uDto = new UserDto();
+			ModelMapper mapper=new ModelMapper();
 			mapper.map(uDao.saveUser(user), uDto);
 			
 			str.setMessage(user.getUName()+" User has Saved");
@@ -53,6 +54,7 @@ public class UserService {
 		UserDto uDto = new UserDto();
 		if(u!=null)
 		{
+			ModelMapper mapper=new ModelMapper();
 			mapper.map(u, uDto);
 			
 			str.setMessage(u.getUName()+" user has founded");
@@ -76,6 +78,7 @@ public class UserService {
 			UserDto uDto = new UserDto();
 			if(exu!=null)
 			{
+				ModelMapper mapper=new ModelMapper();
 				mapper.map(uDao.deleteUser(uId), uDto);
 				
 				str.setMessage(u.getUName()+" user has deleted");
@@ -101,6 +104,7 @@ public class UserService {
 			UserDto uDto = new UserDto();
 			if(exu!=null)
 			{
+				ModelMapper mapper=new ModelMapper();
 				mapper.map(uDao.updateUser(user, uId), uDto);
 				
 				str.setMessage(user.getUName()+" user has updated");
@@ -125,6 +129,7 @@ public class UserService {
 			
 			for (User u : uList) {
 				UserDto uDto = new UserDto();
+				ModelMapper mapper=new ModelMapper();
 				mapper.map(u, uDto);
 				udList.add(uDto);
 			}
@@ -153,6 +158,7 @@ public class UserService {
 			if(u!=null && b!=null)
 			{
 				bList.add(b);
+				ModelMapper mapper=new ModelMapper();
 				mapper.map(uDao.updateUser(u, uId), uDto);
 				str.setMessage("booking assigned to user");
 				str.setStatus(HttpStatus.OK.value());
@@ -183,6 +189,7 @@ public class UserService {
 					bList.remove(b);
 					u.setUBooking(bList);
 					bDao.deleteBooking(bId);
+					ModelMapper mapper=new ModelMapper();
 					mapper.map(uDao.updateUser(u, uId), uDto);
 					str.setMessage("booking has deleted from user");
 					str.setStatus(HttpStatus.OK.value());
@@ -213,6 +220,7 @@ public class UserService {
 				{
 					bList.remove(b);
 					u.setUBooking(bList);
+					ModelMapper mapper=new ModelMapper();
 					mapper.map(uDao.updateUser(u, uId), uDto);
 					str.setMessage("booking has removed from user");
 					str.setStatus(HttpStatus.OK.value());

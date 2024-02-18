@@ -2,6 +2,7 @@ package com.springboot.bookMyShow.services;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import com.springboot.bookMyShow.Entity.Theatre;
 import com.springboot.bookMyShow.dao.AdminDao;
 import com.springboot.bookMyShow.dao.ShowsDao;
 import com.springboot.bookMyShow.dao.TheatreDao;
+
 import com.springboot.bookMyShow.exceptions.AdminNotFound;
 import com.springboot.bookMyShow.exceptions.LoginFailed;
 import com.springboot.bookMyShow.exceptions.ShowsNotFound;
@@ -126,6 +128,29 @@ public class TheatreService {
 		throw new TheatreNotFound("Theatre not found ");
 	}
 	
+	public ResponseEntity<ResponceStructure<Theatre>> assignShowToTheatre(int tId,int sId,String aEmail, String aPassword)
+	{
+		Admin va=aDao.adminLogin(aEmail, aPassword);
+		if(va!=null)
+		{
+			Theatre t= tDao.findTheatre(tId);
+			Shows s=sDao.findShows(sId);
+			List<Shows> sList=t.getTShows();
+			ResponceStructure<Theatre> str= new ResponceStructure<Theatre>();
+			if (t!=null && s != null) {
+				sList.add(s);
+				t.setTShows(sList);
+				
+				str.setMessage("show assigned to the Theatre");
+				str.setStatus(HttpStatus.OK.value());
+				str.setData(tDao.updatetheatre(t, tId));
+				return new ResponseEntity<ResponceStructure<Theatre>>(str, HttpStatus.OK);
+			}
+			throw new TheatreNotFound("show not found with the given id");
+		}
+		throw new LoginFailed("Enter valid email & password");
+	}
+	
 	public ResponseEntity<ResponceStructure<Theatre>> deleteShowFromTheatre(int tId, int sId, String aEmail, String aPassword)
 	{
 		Admin a =aDao.adminLogin(aEmail, aPassword);
@@ -141,6 +166,33 @@ public class TheatreService {
 					sList.remove(show);
 					t.setTShows(sList);
 					sDao.deleteShows(sId);
+					str.setMessage("removed");
+					str.setStatus(HttpStatus.OK.value());
+					str.setData(tDao.updatetheatre(t, tId));
+					
+					return new ResponseEntity<ResponceStructure<Theatre>>(str,HttpStatus.OK);
+				}
+				throw new ShowsNotFound("Shows not found with the given id");
+			}
+			throw new ShowsNotFound("Shows not found with the given id");
+		}
+		throw new AdminNotFound("Enter valid email & passworrd");
+		
+ 	}
+	public ResponseEntity<ResponceStructure<Theatre>> removeShowFromTheatre(int tId, int sId, String aEmail, String aPassword)
+	{
+		Admin a =aDao.adminLogin(aEmail, aPassword);
+		if(a!=null)
+		{
+			Shows show=sDao.findShows(sId);
+			Theatre t=tDao.findTheatre(tId);
+			List<Shows> sList=sDao.findAllShows();
+			ResponceStructure<Theatre> str=new ResponceStructure<Theatre>();
+			for (Shows s : sList) {
+				if(s.getSId()==sId)
+				{
+					sList.remove(show);
+					t.setTShows(sList);
 					str.setMessage("removed");
 					str.setStatus(HttpStatus.OK.value());
 					str.setData(tDao.updatetheatre(t, tId));
