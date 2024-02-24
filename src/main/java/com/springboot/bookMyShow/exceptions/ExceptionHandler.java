@@ -140,7 +140,7 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 			
 		}
 		str.setMessage("Add proper details");
-		str.setStatus(HttpStatus.FORBIDDEN.value());
+		str.setStatus(HttpStatus.BAD_REQUEST.value());
 		str.setData(hasmap);
 		
 		return new ResponseEntity<Object>(str, HttpStatus.BAD_REQUEST);

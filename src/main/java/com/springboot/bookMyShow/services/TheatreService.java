@@ -158,7 +158,7 @@ public class TheatreService {
 		{
 			Shows show=sDao.findShows(sId);
 			Theatre t=tDao.findTheatre(tId);
-			List<Shows> sList=sDao.findAllShows();
+			List<Shows> sList=t.getTShows();
 			ResponceStructure<Theatre> str=new ResponceStructure<Theatre>();
 			for (Shows s : sList) {
 				if(s.getSId()==sId)
@@ -186,7 +186,7 @@ public class TheatreService {
 		{
 			Shows show=sDao.findShows(sId);
 			Theatre t=tDao.findTheatre(tId);
-			List<Shows> sList=sDao.findAllShows();
+			List<Shows> sList=t.getTShows();
 			ResponceStructure<Theatre> str=new ResponceStructure<Theatre>();
 			for (Shows s : sList) {
 				if(s.getSId()==sId)

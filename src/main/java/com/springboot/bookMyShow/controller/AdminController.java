@@ -35,9 +35,9 @@ public class AdminController {
 	}
 	
 	@GetMapping("find")
-	public ResponseEntity<ResponceStructure<AdminDto>> findAdmin(@RequestParam int aId)
+	public ResponseEntity<ResponceStructure<AdminDto>> findAdmin(@RequestParam int aId,@RequestParam String aEmail,@RequestParam String aPassword)
 	{
-		return aService.findAdmin(aId);
+		return aService.findAdmin(aId, aEmail, aPassword);
 	}
 	
 	@DeleteMapping("delete")

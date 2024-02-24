@@ -1,5 +1,9 @@
 package com.springboot.bookMyShow.dto;
 
+import java.util.List;
+
+import com.springboot.bookMyShow.Entity.Booking;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,4 +15,5 @@ public class UserDto {
 	private String uName;
 	private String uEmail;
 
+	private List<Booking> uBooking;
 }

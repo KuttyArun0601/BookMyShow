@@ -69,9 +69,9 @@ public class UserService {
 	
 	public ResponseEntity<ResponceStructure<UserDto>> deleteUser(int uId, String uEmail, String uPassword)
 	{
-		User u =uDao.userLogin(uEmail, uPassword);
-		if(u!=null)
-		{
+//		User u =uDao.userLogin(uEmail, uPassword);
+//		if(u!=null)
+//		{
 			ResponceStructure<UserDto> str= new ResponceStructure<UserDto>();
 			
 			User exu=uDao.findUser(uId);
@@ -81,15 +81,15 @@ public class UserService {
 				ModelMapper mapper=new ModelMapper();
 				mapper.map(uDao.deleteUser(uId), uDto);
 				
-				str.setMessage(u.getUName()+" user has deleted");
+				str.setMessage(exu.getUName()+" user has deleted");
 				str.setStatus(HttpStatus.OK.value());
 				str.setData(uDto);
 				
 				return new ResponseEntity<ResponceStructure<UserDto>>(str,HttpStatus.OK);
 			}
 			throw new UserNotFound("User not found with the given id"+uId);
-		}
-		throw new LoginFailed("Enter valid email & password");
+//		}
+//		throw new LoginFailed("Enter valid email & password");
 		
 	}
 	
@@ -99,9 +99,9 @@ public class UserService {
 		if(u!=null)
 		{
 			ResponceStructure<UserDto> str=new ResponceStructure<UserDto>();
-			
-			User exu=uDao.findUser(uId);
 			UserDto uDto = new UserDto();
+			User exu=uDao.findUser(uId);
+			
 			if(exu!=null)
 			{
 				ModelMapper mapper=new ModelMapper();
@@ -142,7 +142,7 @@ public class UserService {
 			return new ResponseEntity<ResponceStructure<List<UserDto>>>(str,HttpStatus.FOUND);
 			
 		}
-		throw new UserNotFound("User not found");
+		throw new UserNotFound("User's are not present");
 	}
 	
 	public ResponseEntity<ResponceStructure<UserDto>> assignBookingToUser(int uId,int bId,String uEmail,String uPassword)

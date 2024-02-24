@@ -53,13 +53,13 @@ public class UserDao {
 	
 	public List<User> findAllUser()
 	{
-		List<User> user=uRepo.findAll();
-		return user;
+		
+		return uRepo.findAll();
 	}
 	
 	public User userLogin(String uEmail, String uPassword)
 	{
-		User u=uRepo.userLogin(uEmail, uPassword);
-		return u;
+		
+		return uRepo.userLogin(uEmail, uPassword);
 	}
 }

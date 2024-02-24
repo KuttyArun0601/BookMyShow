@@ -9,12 +9,15 @@ import org.springframework.stereotype.Service;
 
 import com.springboot.bookMyShow.Entity.Admin;
 import com.springboot.bookMyShow.Entity.Movie;
+import com.springboot.bookMyShow.Entity.Seats;
 import com.springboot.bookMyShow.Entity.Shows;
 import com.springboot.bookMyShow.dao.AdminDao;
 import com.springboot.bookMyShow.dao.MovieDao;
+import com.springboot.bookMyShow.dao.SeatsDao;
 import com.springboot.bookMyShow.dao.ShowsDao;
 import com.springboot.bookMyShow.dao.TheatreDao;
 import com.springboot.bookMyShow.exceptions.LoginFailed;
+import com.springboot.bookMyShow.exceptions.MovieNotFound;
 import com.springboot.bookMyShow.exceptions.ShowsNotFound;
 import com.springboot.bookMyShow.util.ResponceStructure;
 
@@ -33,6 +36,8 @@ public class ShowsService {
 	@Autowired
 	MovieDao mDao;
 	
+	@Autowired
+	SeatsDao seatDao;
 	public ResponseEntity<ResponceStructure<Shows>> saveShows(Shows shows ,String aEmail,String aPassword)
 	{
 		Admin exa=aDao.adminLogin(aEmail, aPassword);
@@ -129,20 +134,24 @@ public class ShowsService {
 	
 	public ResponseEntity<ResponceStructure<Shows>> assignMovieToShow(int mId, int sId, String aEmail, String aPassword)
 	{
-		Admin exa = aDao.adminLogin(aEmail, aPassword);
-		if(exa!=null)
+		Admin va = aDao.adminLogin(aEmail, aPassword);
+		if(va!=null)
 		{
 			ResponceStructure<Shows> str= new ResponceStructure<Shows>();
 			Shows exs=sDao.findShows(sId);
 			Movie exm=mDao.findMovie(mId);
-			exs.setSMovie(exm);
-			
-			str.setMessage("movie has assigned to show");
-			str.setStatus(HttpStatus.OK.value());
-			str.setData(sDao.updateShows(exs, sId));
-			
-			return new ResponseEntity<ResponceStructure<Shows>>(str,HttpStatus.OK);
-			
+			if(exs!=null && exm!=null)
+			{
+				exs.setSMovie(exm);
+				
+				str.setMessage("movie has assigned to show");
+				str.setStatus(HttpStatus.OK.value());
+				str.setData(sDao.updateShows(exs, sId));
+				
+				return new ResponseEntity<ResponceStructure<Shows>>(str,HttpStatus.OK);
+				
+			}
+			throw new MovieNotFound("movie / show id has not found with the given id");
 		}
 		throw new LoginFailed("Enter valid email & passworrd");
 		
@@ -198,5 +207,32 @@ public class ShowsService {
 	}
 	
 	
+	
+//	public ResponseEntity<ResponceStructure<Shows>> assignSeatToShow(int sId, int seatId, String aEmail, String aPassword)
+//	{
+//		Admin va = aDao.adminLogin(aEmail, aPassword);
+//		if(va!=null)
+//		{
+//			ResponceStructure<Shows> str= new ResponceStructure<Shows>();
+//			Seats exseat=seatDao.findSeats(seatId);
+//			
+//			Shows exs=sDao.findShows(sId);
+//			List<Seats> seatList=sDao.
+//			if(exs!=null && exseat!=null)
+//			{
+//				
+//				
+//				str.setMessage("movie has assigned to show");
+//				str.setStatus(HttpStatus.OK.value());
+//				str.setData(sDao.updateShows(exs, sId));
+//				
+//				return new ResponseEntity<ResponceStructure<Shows>>(str,HttpStatus.OK);
+//				
+//			}
+//			throw new MovieNotFound("movie / show id has not found with the given id");
+//		}
+//		throw new LoginFailed("Enter valid email & passworrd");
+//		
+//	}
 	
 }

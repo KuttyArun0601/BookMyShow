@@ -50,17 +50,26 @@ public class BookingService {
 		{
 			ResponceStructure<Booking> str = new ResponceStructure<Booking>();
 			int noOfTickets=booking.getBNoOfTicket();
-			Movie exm=mDao.findmTitle(booking.getBMovieName().toLowerCase());
+			String mName=booking.getBMovieName();
 			
-			booking.setBprice(exm.getMprice()*noOfTickets);
-			booking.setBDate(exm.getMDate());
-			booking.setBseats(noOfTickets);
-			booking.setBShows(exm.getMShow());
-			str.setMessage("booking has done");
-			str.setStatus(HttpStatus.CREATED.value());
-			str.setData(bDao.saveBooking(booking));
+		
+//			if(mName!=null)
+//			{
+//				mName=mName.toLowerCase();
+				Movie exm=mDao.findmTitle(mName);
+				
+				booking.setBprice(exm.getMprice()*noOfTickets);
+				booking.setBDate(exm.getMDate());
+				booking.setBseats(noOfTickets);
+				booking.setBShows(exm.getMShow());
+				str.setMessage("booking has done");
+				str.setStatus(HttpStatus.CREATED.value());
+				str.setData(bDao.saveBooking(booking));
+				
+				return new ResponseEntity<ResponceStructure<Booking>>(str,HttpStatus.CREATED);
+//			}
+//			throw new IllegalArgumentException("enter proper arguments");
 			
-			return new ResponseEntity<ResponceStructure<Booking>>(str,HttpStatus.CREATED);
 		}
 		throw new LoginFailed("Enter the valid email & password");
 	}

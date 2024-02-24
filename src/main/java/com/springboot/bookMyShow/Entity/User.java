@@ -27,16 +27,17 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int uId;
-	@NotNull(message = "name can't be not null")
-	@NotBlank(message = "name can't be not blank")
+	@NotNull(message = "name can't be  null")
+	@NotBlank(message = "name can't be  blank")
 	private String uName;
+	@NotNull(message = "email can't be  null")
 	@Email(message = "enter valid email (ex: abc@gmail.com)")
-	@NotBlank(message = "email can't be not blank")
+	@NotBlank(message = "email can't be  blank")
 	private String uEmail;
-	@NotNull(message = "password can't be not null")
+	@NotNull(message = "password can't be  null")
 	@NotBlank(message = "password can't be not blank")
-	@Size(min = 8, max = 20)
-	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\\\S+$).{8,}$",
+	@Size(min = 8 , message = "password must be in minimum 8 charecter ")
+	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}$",
 	message = "Your password must have at least minimum 8 charecter, 1 digit, 1 uppercase, 1 lowercase & 1 special charecter")
 	private String uPassword;
 

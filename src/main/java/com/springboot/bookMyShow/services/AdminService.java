@@ -49,23 +49,28 @@ public class AdminService {
 		return new ResponseEntity<ResponceStructure<AdminDto>>(str,HttpStatus.CREATED);
 	}
 	
-	public ResponseEntity<ResponceStructure<AdminDto>> findAdmin(int aId)
+	public ResponseEntity<ResponceStructure<AdminDto>> findAdmin(int aId, String aEmail,String aPassword)
 	{
-		ResponceStructure<AdminDto> str= new ResponceStructure<AdminDto>();
-		AdminDto aDto= new AdminDto();
-		Admin a = aDao.findAdmin(aId);
-		ModelMapper mapper =new  ModelMapper();
-		mapper.map(a, aDto);
-		if(a!=null)
+		Admin exa=aDao.adminLogin(aEmail, aPassword);
+		if(exa!=null)
 		{
-			str.setMessage(a.getAName()+"Admin has founded");
-			str.setStatus(HttpStatus.FOUND.value());
-			str.setData(aDto);
-			
-			return new  ResponseEntity<ResponceStructure<AdminDto>>(str,HttpStatus.FOUND);
-			
+			ResponceStructure<AdminDto> str= new ResponceStructure<AdminDto>();
+			AdminDto aDto= new AdminDto();
+			Admin a = aDao.findAdmin(aId);
+			ModelMapper mapper =new  ModelMapper();
+			mapper.map(a, aDto);
+			if(a!=null)
+			{
+				str.setMessage(a.getAName()+"Admin has founded");
+				str.setStatus(HttpStatus.FOUND.value());
+				str.setData(aDto);
+				
+				return new  ResponseEntity<ResponceStructure<AdminDto>>(str,HttpStatus.FOUND);
+				
+			}
+			throw new AdminNotFound("Admin not found with the given id "+aId);
 		}
-		throw new AdminNotFound("Admin not found with the given id "+aId);
+		throw new LoginFailed("Enter the valid email & password");
 	}
 	
 	public ResponseEntity<ResponceStructure<AdminDto>> deleteAdmin(int aId ,String aEmail,String aPassword)
